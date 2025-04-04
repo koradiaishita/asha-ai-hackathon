@@ -6,6 +6,7 @@ import {
   Mic as MicIcon, 
   AttachFile as AttachFileIcon 
 } from '@mui/icons-material';
+import { VoiceModal } from './VoiceModal';
 
 const ChatBubble = styled.div`
   position: fixed;
@@ -123,6 +124,7 @@ export function ChatWidget() {
     { text: 'Hi! How can I help you today?', isUser: false, type: 'text' }
   ]);
   const [isRecording, setIsRecording] = useState(false);
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const fileInputRef = React.createRef<HTMLInputElement>();
 
   const handleSend = () => {
@@ -143,15 +145,12 @@ export function ChatWidget() {
     }
   };
 
-  const toggleRecording = () => {
-    setIsRecording(!isRecording);
-    if (!isRecording) {
-      // Start recording logic would go here
-      console.log('Started recording');
-    } else {
-      // Stop recording logic would go here
-      console.log('Stopped recording');
-    }
+  const handleVoiceInput = (text: string) => {
+    setMessages([...messages, { 
+      text: text, 
+      isUser: true, 
+      type: 'audio' 
+    }]);
   };
 
   return (
@@ -207,8 +206,7 @@ export function ChatWidget() {
               />
               <IconsContainer>
                 <IconButton
-                  className={isRecording ? 'recording' : ''}
-                  onClick={toggleRecording}
+                  onClick={() => setIsVoiceModalOpen(true)}
                   title="Record audio"
                 >
                   <MicIcon />
@@ -232,6 +230,12 @@ export function ChatWidget() {
           </ChatWindow>
         )}
       </AnimatePresence>
+
+      <VoiceModal 
+        isOpen={isVoiceModalOpen}
+        onClose={() => setIsVoiceModalOpen(false)}
+        onSubmit={handleVoiceInput}
+      />
     </>
   );
 }

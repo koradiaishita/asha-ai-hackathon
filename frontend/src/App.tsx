@@ -1,13 +1,23 @@
 import './App.css'
 import { ChatWidget } from './components/ChatWidget'
-import { Link } from 'react-router-dom' // Add this import
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
+import ResumeAI from './pages/ResumeAI'
+import UpskillNavigator from './pages/UpskillNavigator'
 
 function App() {
-  // Add a navigation handler
-  const navigateToResumeAI = () => {
-    window.location.href = '/resume-ai'; // Simple navigation without router
-  };
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/resume-ai" element={<ResumeAI />} />
+        <Route path="/upskill-navigator" element={<UpskillNavigator />} />
+      </Routes>
+    </Router>
+  )
+}
 
+// HomePage component for the main landing page
+function HomePage() {
   return (
     <div className="app">
       {/* Header */}
@@ -31,13 +41,17 @@ function App() {
         <aside className="left-sidebar">
           <nav className="nav-menu">
             <ul>
-              <li className="nav-item" onClick={navigateToResumeAI} style={{ cursor: 'pointer' }}>
-                <span className="nav-icon mic-icon"></span>
-                <span className="nav-text">Resume AI</span>
+              <li className="nav-item">
+                <Link to="/resume-ai" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <span className="nav-icon mic-icon"></span>
+                  <span className="nav-text">Resume AI</span>
+                </Link>
               </li>
-              <li className="nav-item active">
-                <span className="nav-icon briefcase-icon"></span>
-                <span className="nav-text">Jobs</span>
+              <li className="nav-item">
+                <Link to="/upskill-navigator" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <span className="nav-icon briefcase-icon"></span>
+                  <span className="nav-text">Upskill Navigator</span>
+                </Link>
               </li>
               <li className="nav-item">
                 <span className="nav-icon building-icon"></span>

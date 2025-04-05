@@ -1,121 +1,12 @@
-import React, { useState } from 'react';
-import styled from '@emotion/styled';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Send as SendIcon, 
   Mic as MicIcon, 
-  AttachFile as AttachFileIcon 
+  AttachFile as AttachFileIcon,
+  Close as CloseIcon
 } from '@mui/icons-material';
 import { VoiceModal } from './VoiceModal';
-
-const ChatBubble = styled.div`
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  background: white;
-  padding: 1rem;
-  border-radius: 15px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-  color: #ff1493;
-  cursor: pointer;
-  z-index: 1000;
-`;
-
-const ChatWindow = styled(motion.div)`
-  position: fixed;
-  bottom: 6rem;
-  right: 2rem;
-  width: 350px;
-  height: 500px;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  z-index: 999;
-`;
-
-const ChatHeader = styled.div`
-  background: linear-gradient(135deg, #ff69b4, #ff1493);
-  color: white;
-  padding: 1rem;
-  font-weight: 500;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ChatMessages = styled.div`
-  flex: 1;
-  padding: 1rem;
-  overflow-y: auto;
-  background: #f5f5f5;
-`;
-
-const ChatInput = styled.div`
-  padding: 1rem;
-  border-top: 1px solid #eee;
-  display: flex;
-  gap: 0.5rem;
-  background: white;
-`;
-
-const Input = styled.input`
-  flex: 1;
-  padding: 0.5rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  outline: none;
-  &:focus {
-    border-color: #ff1493;
-  }
-`;
-
-const CloseButton = styled.button`
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 0;
-  font-size: 1.2rem;
-`;
-
-const IconButton = styled.button`
-  background: none;
-  border: none;
-  color: #ff1493;
-  cursor: pointer;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: rgba(255, 20, 147, 0.1);
-  }
-
-  svg {
-    font-size: 20px;
-  }
-
-  &.recording {
-    color: red;
-    animation: pulse 1.5s infinite;
-  }
-`;
-
-const IconsContainer = styled.div`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-`;
-
-const HiddenFileInput = styled.input`
-  display: none;
-`;
 
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -123,15 +14,58 @@ export function ChatWidget() {
   const [messages, setMessages] = useState<{ text: string; isUser: boolean; type?: 'text' | 'file' | 'audio' }[]>([
     { text: 'Hi! How can I help you today?', isUser: false, type: 'text' }
   ]);
-  const [isRecording, setIsRecording] = useState(false);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
-  const fileInputRef = React.createRef<HTMLInputElement>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatWindowRef = useRef<HTMLDivElement>(null);
+
+  // Handle clicks outside the chat window to close it
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (isOpen && 
+          chatWindowRef.current && 
+          !chatWindowRef.current.contains(event.target as Node) &&
+          !(event.target as Element).closest('.chat-bubble')) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const toggleChat = () => {
+    setIsOpen(prev => !prev);
+  };
 
   const handleSend = () => {
     if (message.trim()) {
       setMessages([...messages, { text: message, isUser: true, type: 'text' }]);
+      
+      // Simulate bot response
+      setTimeout(() => {
+        setMessages(prev => [...prev, { 
+          text: "I'm your Asha AI assistant. How can I help you?", 
+          isUser: false, 
+          type: 'text' 
+        }]);
+      }, 1000);
+      
       setMessage('');
     }
+  };
+
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,6 +76,11 @@ export function ChatWidget() {
         isUser: true, 
         type: 'file' 
       }]);
+      
+      // Clear the input for future uploads
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -151,83 +90,115 @@ export function ChatWidget() {
       isUser: true, 
       type: 'audio' 
     }]);
+    
+    // Simulate bot response
+    setTimeout(() => {
+      setMessages(prev => [...prev, { 
+        text: "I received your voice message. How else can I assist you?", 
+        isUser: false, 
+        type: 'text' 
+      }]);
+    }, 1000);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   };
 
   return (
-    <>
-      <ChatBubble onClick={() => setIsOpen(true)}>
-        👋 Chat with Asha AI
-      </ChatBubble>
+    <div className="chat-widget">
+      <div className="chat-bubble" onClick={toggleChat}>
+        🤖
+      </div>
 
       <AnimatePresence>
         {isOpen && (
-          <ChatWindow
+          <motion.div 
+            className="chat-window"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.3 }}
+            ref={chatWindowRef}
+            style={{ maxHeight: 'calc(100vh - 120px)' }}
           >
-            <ChatHeader>
-              <span>Asha AI Assistant</span>
-              <CloseButton onClick={() => setIsOpen(false)}>✕</CloseButton>
-            </ChatHeader>
+            <div className="chat-header">
+              <div className="chat-header-title">
+                <div className="bot-avatar"></div>
+                <span>Asha AI Assistant</span>
+              </div>
+              <button 
+                className="chat-icon-button" 
+                onClick={() => setIsOpen(false)}
+                style={{ 
+                  background: 'transparent', 
+                  width: '30px', 
+                  height: '30px',
+                  color: 'white'
+                }}
+              >
+                <CloseIcon />
+              </button>
+            </div>
 
-            <ChatMessages>
+            <div className="chat-messages">
               {messages.map((msg, index) => (
                 <div
                   key={index}
-                  style={{
-                    textAlign: msg.isUser ? 'right' : 'left',
-                    marginBottom: '0.5rem'
-                  }}
+                  className={`message-container ${msg.isUser ? 'user' : ''}`}
                 >
-                  <div
-                    style={{
-                      display: 'inline-block',
-                      background: msg.isUser ? '#ff1493' : '#f0f0f0',
-                      color: msg.isUser ? 'white' : 'black',
-                      padding: '0.5rem 1rem',
-                      borderRadius: '15px',
-                      maxWidth: '80%'
-                    }}
-                  >
+                  <div className={`message-avatar ${msg.isUser ? 'user-avatar' : 'bot-message-avatar'}`}>
+                  </div>
+                  <div className={`message ${msg.isUser ? 'user' : 'bot'}`}>
                     {msg.text}
                   </div>
                 </div>
               ))}
-            </ChatMessages>
+              <div ref={messagesEndRef} />
+            </div>
 
-            <ChatInput>
-              <Input
+            <div className="chat-input">
+              <input
                 type="text"
                 placeholder="Type your message..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                onKeyPress={handleKeyPress}
               />
-              <IconsContainer>
-                <IconButton
+              <div className="chat-icons">
+                <button
+                  className="chat-icon-button"
                   onClick={() => setIsVoiceModalOpen(true)}
                   title="Record audio"
                 >
                   <MicIcon />
-                </IconButton>
-                <IconButton
+                </button>
+                <button
+                  className="chat-icon-button"
                   onClick={() => fileInputRef.current?.click()}
                   title="Attach file"
                 >
                   <AttachFileIcon />
-                </IconButton>
-                <IconButton onClick={handleSend} title="Send message">
+                </button>
+                <button 
+                  className="chat-icon-button send-button" 
+                  onClick={handleSend} 
+                  title="Send message"
+                >
                   <SendIcon />
-                </IconButton>
-              </IconsContainer>
-              <HiddenFileInput
+                </button>
+              </div>
+              <input
                 type="file"
                 ref={fileInputRef}
                 onChange={handleFileSelect}
+                style={{ display: 'none' }}
               />
-            </ChatInput>
-          </ChatWindow>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -236,6 +207,6 @@ export function ChatWidget() {
         onClose={() => setIsVoiceModalOpen(false)}
         onSubmit={handleVoiceInput}
       />
-    </>
+    </div>
   );
 }

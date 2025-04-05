@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { 
   Mic, 
@@ -9,73 +8,6 @@ import {
   Refresh, 
   Send 
 } from '@mui/icons-material';
-
-const ModalOverlay = styled(motion.div)`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-`;
-
-const ModalContent = styled(motion.div)`
-  background: white;
-  padding: 2rem;
-  border-radius: 15px;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  color: #333;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 1.5rem;
-`;
-
-const IconButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.8rem;
-  border-radius: 50%;
-  border: none;
-  background: #ff1493;
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  &:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-  }
-`;
-
-const Timer = styled.div`
-  font-size: 2rem;
-  margin: 1rem 0;
-  font-weight: bold;
-  color: #ff1493;
-`;
-
-const TranscriptText = styled.p`
-  margin: 1rem 0;
-  padding: 1rem;
-  background: #f5f5f5;
-  border-radius: 8px;
-  min-height: 60px;
-`;
 
 interface VoiceModalProps {
   isOpen: boolean;
@@ -163,46 +95,55 @@ export function VoiceModal({ isOpen, onClose, onSubmit }: VoiceModalProps) {
   if (!isOpen) return null;
 
   return (
-    <ModalOverlay
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-    >
-      <ModalContent onClick={(e) => e.stopPropagation()}>
-        <h2>Voice Recording</h2>
-        <Timer>
+    <div className="voice-modal-overlay" onClick={onClose}>
+      <motion.div 
+        className="voice-modal-content"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="voice-modal-header">
+          <span className="voice-modal-icon">🎤</span>
+          <h2 className="voice-modal-title">Voice Recording</h2>
+        </div>
+        
+        <div className="voice-timer">
           {Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}
-        </Timer>
-        <TranscriptText>
+        </div>
+        
+        <div className="voice-transcript">
           {transcript || 'Start speaking...'}
-        </TranscriptText>
-        <ButtonGroup>
+        </div>
+        
+        <div className="voice-controls">
           {!isRecording ? (
-            <IconButton onClick={startRecording}>
+            <button className="voice-button" onClick={startRecording}>
               <Mic />
-            </IconButton>
+            </button>
           ) : (
             <>
-              <IconButton onClick={stopRecording}>
+              <button className="voice-button" onClick={stopRecording}>
                 <Stop />
-              </IconButton>
-              <IconButton onClick={togglePause}>
+              </button>
+              <button className="voice-button" onClick={togglePause}>
                 {isPaused ? <PlayArrow /> : <Pause />}
-              </IconButton>
+              </button>
             </>
           )}
-          <IconButton onClick={resetRecording}>
+          <button className="voice-button reset" onClick={resetRecording}>
             <Refresh />
-          </IconButton>
-          <IconButton 
+          </button>
+          <button 
+            className="voice-button send"
             onClick={handleSubmit}
             disabled={!transcript}
+            style={{ opacity: transcript ? 1 : 0.5 }}
           >
             <Send />
-          </IconButton>
-        </ButtonGroup>
-      </ModalContent>
-    </ModalOverlay>
+          </button>
+        </div>
+      </motion.div>
+    </div>
   );
 }

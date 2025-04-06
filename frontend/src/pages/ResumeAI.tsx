@@ -1024,21 +1024,21 @@ Ishita Koradia
                     <li style={{ marginBottom: "10px" }}>Provides a compatibility score for specific job descriptions</li>
                   </ul>
                   
-                  <div style={{ display: "flex", gap: "15px", marginTop: "25px" }}>
-                    <button 
-                      className="update-btn" 
-                      onClick={() => setShowResumePreview(true)}
-                    >
-                      Optimize Existing Resume
-                    </button>
-                    <button 
-                      className="update-btn" 
-                      style={{ background: "var(--primary)" }}
-                      onClick={handleCreateNewResume}
-                    >
-                      Create New ATS Resume
-                    </button>
-                  </div>
+              <div style={{ display: "flex", gap: "15px", marginTop: "25px" }}>
+                <button 
+                  className="update-btn" 
+                  onClick={() => setShowResumePreview(true)}
+                >
+                  Optimize Existing Resume
+                </button>
+                <button 
+                  className="update-btn" 
+                  style={{ background: "var(--primary)" }}
+                  onClick={handleCreateNewResume}
+                >
+                  Create New ATS Resume
+                </button>
+              </div>
                 </>
               ) : (
                 <>
@@ -1638,6 +1638,15 @@ Ishita Koradia
                 <li style={{ marginBottom: "10px" }}>Matches your experience to the role's needs</li>
                 <li style={{ marginBottom: "10px" }}>Creates compelling narratives about your career journey</li>
                 <li style={{ marginBottom: "10px" }}>Adapts tone to match company culture</li>
+              </ul>
+              
+              <div style={{ marginTop: "20px", padding: "15px", background: "var(--primary-light)", borderRadius: "8px" }}>
+                <h4 style={{ marginBottom: "10px" }}>Enter Job Description:</h4>
+                <textarea 
+                  placeholder="Paste job description here..."
+                  style={{ 
+                    width: "100%", 
+                    minHeight: "120px", 
                     padding: "10px", 
                     borderRadius: "5px",
                     border: "1px solid var(--border-light)"
@@ -2596,35 +2605,51 @@ Ishita Koradia
           <nav className="nav-menu">
             <ul>
               <li className="nav-item active">
-                <span className="nav-icon mic-icon"></span>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>📄</span>
+                </span>
                 <span className="nav-text">Resume AI</span>
               </li>
               <li className="nav-item" onClick={navigateToHome} style={{ cursor: 'pointer' }}>
-                <span className="nav-icon briefcase-icon"></span>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>💼</span>
+                </span>
                 <span className="nav-text">Jobs</span>
               </li>
               <li className="nav-item">
-                <span className="nav-icon building-icon"></span>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>🏢</span>
+                </span>
                 <span className="nav-text">Companies</span>
               </li>
               <li className="nav-item">
-                <span className="nav-icon group-icon"></span>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>👥</span>
+                </span>
                 <span className="nav-text">Community</span>
               </li>
               <li className="nav-item">
-                <span className="nav-icon post-icon"></span>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>📝</span>
+                </span>
                 <span className="nav-text">Career Resources</span>
               </li>
               <li className="nav-item">
-                <span className="nav-icon network-icon"></span>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>🔗</span>
+                </span>
                 <span className="nav-text">Mentorship</span>
               </li>
               <li className="nav-item">
-                <span className="nav-icon calendar-icon"></span>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>📅</span>
+                </span>
                 <span className="nav-text">Events</span>
               </li>
               <li className="nav-item">
-                <span className="nav-icon grid-icon"></span>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>📊</span>
+                </span>
                 <span className="nav-text">More</span>
               </li>
             </ul>

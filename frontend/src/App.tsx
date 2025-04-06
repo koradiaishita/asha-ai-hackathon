@@ -3,6 +3,28 @@ import { ChatWidget } from './components/ChatWidget'
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
 import ResumeAI from './pages/ResumeAI'
 import UpskillNavigator from './pages/UpskillNavigator'
+// Import Material UI icons
+import HomeIcon from '@mui/icons-material/Home'
+import DescriptionIcon from '@mui/icons-material/Description'
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter'
+import FolderSpecialIcon from '@mui/icons-material/FolderSpecial'
+import GroupIcon from '@mui/icons-material/Group'
+import SchoolIcon from '@mui/icons-material/School'
+import EventIcon from '@mui/icons-material/Event'
+import ContactSupportIcon from '@mui/icons-material/ContactSupport'
+import SearchIcon from '@mui/icons-material/Search'
+import FilterListIcon from '@mui/icons-material/FilterList'
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
+import FlashOnIcon from '@mui/icons-material/FlashOn'
+import HomeWorkIcon from '@mui/icons-material/HomeWork'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import FacebookIcon from '@mui/icons-material/Facebook'
+import TwitterIcon from '@mui/icons-material/Twitter'
+import LinkedInIcon from '@mui/icons-material/LinkedIn'
+import InstagramIcon from '@mui/icons-material/Instagram'
+import MenuIcon from '@mui/icons-material/Menu'
+import WbSunnyIcon from '@mui/icons-material/WbSunny'
+import AppsIcon from '@mui/icons-material/Apps'
 
 function App() {
   return (
@@ -32,6 +54,7 @@ function HomePage() {
             placeholder="Search jobs, skills or career opportunities" 
             className="search-input" 
           />
+          <SearchIcon className="search-icon" fontSize="small" />
         </div>
         <button className="sign-up-btn">Sign Up</button>
       </header>
@@ -42,45 +65,57 @@ function HomePage() {
           <nav className="nav-menu">
             <ul>
               <li className="nav-item">
-                <Link to="/resume-ai" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <span className="nav-icon mic-icon"></span>
+                <Link to="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
+                  <HomeIcon className="nav-icon" />
+                  <span className="nav-text">Home</span>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/resume-ai" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
+                  <DescriptionIcon className="nav-icon" />
                   <span className="nav-text">Resume AI</span>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/upskill-navigator" style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <span className="nav-icon briefcase-icon"></span>
+                <Link to="/upskill-navigator" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
+                  <BusinessCenterIcon className="nav-icon" />
                   <span className="nav-text">Upskill Navigator</span>
                 </Link>
               </li>
               <li className="nav-item">
-                <span className="nav-icon building-icon"></span>
-                <span className="nav-text">Companies</span>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <FolderSpecialIcon className="nav-icon" />
+                  <span className="nav-text">Projects</span>
+                </div>
               </li>
               <li className="nav-item">
-                <span className="nav-icon group-icon"></span>
-                <span className="nav-text">Community</span>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <GroupIcon className="nav-icon" />
+                  <span className="nav-text">Interview AI</span>
+                </div>
               </li>
               <li className="nav-item">
-                <span className="nav-icon post-icon"></span>
-                <span className="nav-text">Career Resources</span>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <SchoolIcon className="nav-icon" />
+                  <span className="nav-text">Mentorship</span>
+                </div>
               </li>
               <li className="nav-item">
-                <span className="nav-icon network-icon"></span>
-                <span className="nav-text">Mentorship</span>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <EventIcon className="nav-icon" />
+                  <span className="nav-text">Events</span>
+                </div>
               </li>
               <li className="nav-item">
-                <span className="nav-icon calendar-icon"></span>
-                <span className="nav-text">Events</span>
-              </li>
-              <li className="nav-item">
-                <span className="nav-icon grid-icon"></span>
-                <span className="nav-text">More</span>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <ContactSupportIcon className="nav-icon" />
+                  <span className="nav-text">Contact us</span>
+                </div>
               </li>
             </ul>
             <div className="herkey-business">
               <button className="business-btn">
-                <span className="business-icon">☰</span>
+                <MenuIcon className="business-icon" />
                 JobsForHer for Employers
               </button>
             </div>
@@ -88,10 +123,10 @@ function HomePage() {
               <img src="/google-play-badge.png" alt="Get it on Google Play" className="google-play" />
             </div>
             <div className="social-icons">
-              <span className="social-icon"></span>
-              <span className="social-icon"></span>
-              <span className="social-icon"></span>
-              <span className="social-icon"></span>
+              <FacebookIcon className="social-icon" />
+              <TwitterIcon className="social-icon" />
+              <LinkedInIcon className="social-icon" />
+              <InstagramIcon className="social-icon" />
             </div>
           </nav>
         </aside>
@@ -102,23 +137,23 @@ function HomePage() {
           <section className="work-mode-section">
             <div className="section-header">
               <h2>Discover opportunities by work mode</h2>
-              <span className="filter-icon"></span>
+              <FilterListIcon className="filter-icon" />
             </div>
             <div className="work-mode-options">
               <div className="mode-card wfh">
-                <span className="mode-icon home-icon"></span>
+                <HomeWorkIcon className="mode-icon" />
                 <span className="mode-text">Work From Home</span>
               </div>
               <div className="mode-card hybrid">
-                <span className="mode-icon hybrid-icon"></span>
+                <WbSunnyIcon className="mode-icon" />
                 <span className="mode-text">Hybrid</span>
               </div>
               <div className="mode-card part-time">
-                <span className="mode-icon clock-icon"></span>
+                <AccessTimeIcon className="mode-icon" />
                 <span className="mode-text">Part Time</span>
               </div>
               <div className="mode-card full-time">
-                <span className="mode-icon building-icon"></span>
+                <BusinessCenterIcon className="mode-icon" />
                 <span className="mode-text">Full Time</span>
               </div>
             </div>
@@ -141,9 +176,9 @@ function HomePage() {
                 <span className="newly-added">Returnship Friendly</span>
               </div>
               <div className="job-actions">
-                <button className="bookmark-btn"></button>
+                <BookmarkBorderIcon className="bookmark-btn" />
                 <button className="apply-btn">
-                  <span className="lightning-icon"></span>
+                  <FlashOnIcon className="lightning-icon" />
                   Easy Apply
                 </button>
               </div>
@@ -162,9 +197,9 @@ function HomePage() {
                 <span className="newly-added">Women Preferred</span>
               </div>
               <div className="job-actions">
-                <button className="bookmark-btn"></button>
+                <BookmarkBorderIcon className="bookmark-btn" />
                 <button className="apply-btn">
-                  <span className="lightning-icon"></span>
+                  <FlashOnIcon className="lightning-icon" />
                   Easy Apply
                 </button>
               </div>

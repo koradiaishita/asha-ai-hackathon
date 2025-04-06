@@ -57,14 +57,24 @@ body {
   flex: 1;
   max-width: 650px;
   margin: 0 20px;
+  position: relative;
 }
 
 .search-input {
   width: 100%;
-  padding: 10px 15px;
+  padding: 10px 15px 10px 40px;
   border-radius: 20px;
   border: none;
   font-size: 14px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-gray);
+  font-size: 20px !important;
 }
 
 .sign-up-btn {
@@ -106,19 +116,29 @@ body {
   padding: 12px 20px;
   color: var(--text-gray);
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-item:hover {
+  background-color: var(--primary-light);
+  color: var(--purple-text);
 }
 
 .nav-item.active {
   color: var(--purple-text);
   font-weight: 600;
+  background-color: var(--primary-light);
 }
 
 .nav-icon {
-  width: 20px;
-  height: 20px;
+  width: 24px !important;
+  height: 24px !important;
   margin-right: 12px;
-  display: inline-block;
-  background-color: #ddd; /* Placeholder for actual icons */
+  color: inherit;
+}
+
+.nav-text {
+  color: inherit;
 }
 
 .herkey-business {
@@ -141,6 +161,7 @@ body {
 
 .business-icon {
   margin-right: 8px;
+  color: var(--primary);
 }
 
 .app-download {
@@ -158,10 +179,15 @@ body {
 }
 
 .social-icon {
-  width: 24px;
-  height: 24px;
-  background-color: #ddd; /* Placeholder for actual icons */
-  display: inline-block;
+  width: 28px !important;
+  height: 28px !important;
+  color: var(--primary);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.social-icon:hover {
+  color: var(--purple-text);
 }
 
 /* Main Content */
@@ -175,6 +201,11 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+}
+
+.filter-icon {
+  cursor: pointer;
+  color: var(--text-gray);
 }
 
 .work-mode-options {
@@ -192,6 +223,12 @@ body {
   align-items: center;
   cursor: pointer;
   min-width: 120px;
+  transition: transform 0.2s;
+}
+
+.mode-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .mode-card.wfh {
@@ -199,10 +236,10 @@ body {
 }
 
 .mode-icon {
-  width: 24px;
-  height: 24px;
+  width: 24px !important;
+  height: 24px !important;
   margin-right: 10px;
-  display: inline-block;
+  color: var(--primary);
 }
 
 .featured-jobs h2 {
@@ -215,13 +252,20 @@ body {
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.job-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .company-logo {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #f4f4f4;
+  background-color: var(--primary-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -232,7 +276,7 @@ body {
   width: 30px;
   height: 30px;
   display: inline-block;
-  background-color: var(--primary); /* Placeholder for actual logo */
+  background-color: var(--primary);
 }
 
 .job-info {
@@ -275,11 +319,15 @@ body {
 }
 
 .bookmark-btn {
-  width: 24px;
-  height: 24px;
-  background-color: transparent;
-  border: none;
+  color: var(--text-gray);
   cursor: pointer;
+  width: 24px !important;
+  height: 24px !important;
+  transition: color 0.2s;
+}
+
+.bookmark-btn:hover {
+  color: var(--primary);
 }
 
 .apply-btn {
@@ -293,12 +341,16 @@ body {
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.apply-btn:hover {
+  background-color: #69b132;
 }
 
 .lightning-icon {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
+  width: 16px !important;
+  height: 16px !important;
   margin-right: 5px;
 }
 
@@ -314,6 +366,7 @@ body {
   padding: 20px;
   text-align: center;
   margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .profile-title {
@@ -324,7 +377,7 @@ body {
 
 .profile-image {
   height: 200px;
-  background-color: #f4f4f4; /* Placeholder for illustration */
+  background-color: #f4f4f4;
   margin-bottom: 15px;
   border-radius: 8px;
 }
@@ -337,6 +390,11 @@ body {
   border-radius: 20px;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.update-btn:hover {
+  background-color: #69b132;
 }
 
 .career-break-card {
@@ -344,6 +402,7 @@ body {
   border-radius: 10px;
   padding: 20px;
   color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .card-title {
@@ -365,7 +424,7 @@ body {
 
 .card-image {
   height: 120px;
-  background-color: rgba(255, 255, 255, 0.1); /* Placeholder for image */
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
 }
 

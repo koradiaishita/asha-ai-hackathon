@@ -4,7 +4,8 @@ import {
   Send as SendIcon, 
   Mic as MicIcon, 
   AttachFile as AttachFileIcon,
-  Close as CloseIcon
+  Close as CloseIcon,
+  Chat as ChatIcon
 } from '@mui/icons-material';
 import { VoiceModal } from './VoiceModal';
 
@@ -111,7 +112,7 @@ export function ChatWidget() {
   return (
     <div className="chat-widget">
       <div className="chat-bubble" onClick={toggleChat}>
-        🤖
+        <ChatIcon style={{ fontSize: '28px' }} />
       </div>
 
       <AnimatePresence>

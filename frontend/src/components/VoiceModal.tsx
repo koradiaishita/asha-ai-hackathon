@@ -6,7 +6,8 @@ import {
   Pause, 
   PlayArrow, 
   Refresh, 
-  Send 
+  Send,
+  MicNone
 } from '@mui/icons-material';
 
 interface VoiceModalProps {
@@ -104,7 +105,7 @@ export function VoiceModal({ isOpen, onClose, onSubmit }: VoiceModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="voice-modal-header">
-          <span className="voice-modal-icon">🎤</span>
+          <MicNone className="voice-modal-icon" style={{ fontSize: '28px', color: 'var(--primary)' }} />
           <h2 className="voice-modal-title">Voice Recording</h2>
         </div>
         

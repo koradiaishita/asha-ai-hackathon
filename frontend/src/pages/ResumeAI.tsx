@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import { ChatWidget } from '../components/ChatWidget';
 import { ResumeFeatureContent } from '../components/resume-features/ResumeFeatureContent';
+import { ProjectRecommendations } from '../components/ProjectRecommendations';
 import '../App.css';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
@@ -162,7 +163,9 @@ function ResumeAI() {
   const [newResume, setNewResume] = useState({ ...blankResumeTemplate });
   const [targetJobTitle, setTargetJobTitle] = useState("");
   const [isCreatingResume, setIsCreatingResume] = useState<boolean>(false);
-  
+  const [uploadedResume, setUploadedResume] = useState<File | null>(null);
+  const [resumePreviewUrl, setResumePreviewUrl] = useState<string>("");
+
   // Refs for the canvas PDF generation
   const resumeRef = useRef<HTMLDivElement>(null);
   
@@ -184,7 +187,7 @@ function ResumeAI() {
     }, 1500);
   };
   
-  // Handle resume download as PDF
+  // Handle resume download as PDF with the selected template
   const handleDownloadResume = () => {
     setIsDownloading(true);
     
@@ -199,6 +202,37 @@ function ResumeAI() {
               const imgData = canvas.toDataURL('image/png');
               const imgWidth = 210; // A4 width in mm
               const imgHeight = (canvas.height * imgWidth) / canvas.width;
+              
+              // Apply template-specific styling if a template is selected
+              if (selectedTemplate) {
+                // We could add template-specific headers, footers, or styling here
+                if (selectedTemplate === "Professional") {
+                  pdf.setDrawColor(50, 50, 50);
+                  pdf.setLineWidth(0.5);
+                  pdf.line(10, 10, 200, 10); // Top border
+                  pdf.line(10, 287, 200, 287); // Bottom border
+                } else if (selectedTemplate === "Modern") {
+                  pdf.setFillColor(240, 240, 255);
+                  pdf.rect(0, 0, 60, 297, 'F'); // Left sidebar background
+                } else if (selectedTemplate === "Creative") {
+                  pdf.setDrawColor(63, 135, 255);
+                  pdf.setLineWidth(5);
+                  pdf.line(10, 20, 200, 20); // Thick accent line
+                } else if (selectedTemplate === "Executive") {
+                  pdf.setFillColor(68, 68, 68);
+                  pdf.rect(0, 0, 210, 40, 'F'); // Dark header
+                } else if (selectedTemplate === "Minimalist") {
+                  // Minimalist has no extra decorations
+                } else if (selectedTemplate === "Technical") {
+                  pdf.setDrawColor(173, 198, 255);
+                  pdf.setLineWidth(2);
+                  pdf.line(10, 10, 10, 287); // Left accent line
+                } else if (selectedTemplate === "Graduate") {
+                  pdf.setDrawColor(0, 0, 0);
+                  pdf.setLineWidth(0.3);
+                  pdf.rect(10, 10, 190, 277, 'S'); // Simple border
+                }
+              }
               
               pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
               
@@ -243,6 +277,9 @@ function ResumeAI() {
       setShowResumePreview(true);
       setSelectedFeature(FEATURES.ATS);
       setIsCreatingResume(false);
+      
+      // Keep the selected template when navigating to the preview
+      // This ensures the same template will be used when downloading
     }, 3000);
   };
 
@@ -262,8 +299,6 @@ function ResumeAI() {
   const coverLetterRef = useRef<HTMLDivElement>(null);
   
   // Resume upload and analysis state
-  const [uploadedResume, setUploadedResume] = useState<File | null>(null);
-  const [resumePreviewUrl, setResumePreviewUrl] = useState<string>("");
   const [analysisReport, setAnalysisReport] = useState<any>(null);
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const analysisReportRef = useRef<HTMLDivElement>(null);
@@ -2515,7 +2550,7 @@ Ishita Koradia
                 >
                   <div style={{ fontSize: "24px", marginBottom: "10px" }}>📂</div>
                   <h3 className="job-title" style={{ marginBottom: "10px" }}>Project Recommendations</h3>
-                  <p style={{ fontSize: "14px", color: "var(--text-gray)", flex: 1 }}>
+                  <p style={{ fontSize: "14px", color: "var (--text-gray)", flex: 1 }}>
                     Discover industry-relevant projects to enhance your portfolio and demonstrate your skills.
                   </p>
                   <button 
@@ -2523,7 +2558,7 @@ Ishita Koradia
                     style={{ alignSelf: "flex-start", marginTop: "15px" }}
                     onClick={(e) => { e.stopPropagation(); setSelectedFeature(FEATURES.PROJECTS); }}
                   >
-                    View Projects
+                    Find Projects
                   </button>
                 </div>
               </div>
@@ -2544,14 +2579,24 @@ Ishita Koradia
                   <p style={{ marginBottom: "15px", color: "var(--text-gray)" }}>
                     Drag and drop your resume here or click to browse
                   </p>
-                  <button className="update-btn" style={{ marginTop: "10px" }}>
-                    Upload Resume
-                  </button>
+                  <input
+                    type="file"
+                    accept=".pdf,.docx,.rtf"
+                    onChange={handleResumeUpload}
+                    style={{ display: "none" }}
+                    id="resume-upload"
+                  />
+                  <label htmlFor="resume-upload">
+                    <button className="update-btn" style={{ marginTop: "10px" }}>
+                      Upload Resume
+                    </button>
+                  </label>
                 </div>
-                
-                <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>
-                  Supported formats: PDF, DOCX, RTF (Max size: 5MB)
-                </p>
+                {uploadedResume && (
+                  <p style={{ marginTop: "10px", color: "var(--text-gray)" }}>
+                    Uploaded File: {uploadedResume.name}
+                  </p>
+                )}
               </div>
             </section>
 
@@ -2622,6 +2667,12 @@ Ishita Koradia
                 </span>
                 <span className="nav-text">Companies</span>
               </li>
+              <li className="nav-item" onClick={() => setSelectedFeature(FEATURES.PROJECTS)} style={{ cursor: 'pointer' }}>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>📂</span>
+                </span>
+                <span className="nav-text">Projects</span>
+              </li>
               <li className="nav-item">
                 <span className="nav-icon">
                   <span style={{ fontSize: "22px" }}>👥</span>
@@ -2673,6 +2724,7 @@ Ishita Koradia
 
         {/* Main Content - Resume AI Specific */}
         <main className="main-content">
+          {/* Back to Home Arrow */}
           {selectedFeature !== FEATURES.HOME && (
             <div style={{ marginBottom: "20px" }}>
               <button 
@@ -2687,7 +2739,7 @@ Ishita Koradia
                   padding: "5px 0"
                 }}
               >
-                ← Back to all features
+                ← Back to Home
               </button>
             </div>
           )}
@@ -2715,6 +2767,11 @@ Ishita Koradia
               Analyze Resume
             </button>
           </div>
+
+          {/* Project Recommendations Component */}
+          <ProjectRecommendations 
+            onViewAllClick={() => setSelectedFeature(FEATURES.PROJECTS)}
+          />
 
           <div className="career-break-card">
             <h2 className="card-title">Resume Tips for Career Breaks</h2>

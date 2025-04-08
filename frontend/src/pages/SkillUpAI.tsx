@@ -1,11 +1,115 @@
-import React from 'react';
+import { useState, useRef } from 'react';
 import { ChatWidget } from '../components/ChatWidget';
 import '../App.css';
 
-function UpskillNavigator() {
+function SkillUpAI() {
+  // Career roadmap state and handlers
+  const [careerRoadmap, setCareerRoadmap] = useState<any>(null);
+  const [isGeneratingRoadmap, setIsGeneratingRoadmap] = useState<boolean>(false);
+  const [currentJobTitle, setCurrentJobTitle] = useState<string>("");
+  const [targetJobTitle, setTargetJobTitle] = useState<string>("");
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
+  const roadmapRef = useRef<HTMLDivElement>(null);
+  
   // Add a navigation handler that will be implemented when router is installed
   const navigateToHome = () => {
     window.location.href = '/'; // Simple navigation without router
+  };
+  
+  // Handle generating career roadmap
+  const handleGenerateCareerRoadmap = () => {
+    if (!currentJobTitle.trim() || !targetJobTitle.trim()) {
+      alert("Please enter both your current and target job titles.");
+      return;
+    }
+    
+    setIsGeneratingRoadmap(true);
+    
+    // Simulate AI processing
+    setTimeout(() => {
+      // In a real app, we would send the job titles to an API
+      setCareerRoadmap({
+        currentRole: currentJobTitle,
+        targetRole: targetJobTitle,
+        timeEstimate: "2-3 years",
+        skillGaps: [
+          "Advanced data analytics",
+          "Project management certification",
+          "Leadership experience",
+          "Strategic planning",
+          "Industry-specific knowledge"
+        ],
+        milestones: [
+          {
+            title: "Short-term (0-6 months)",
+            tasks: [
+              "Complete a certified project management course",
+              "Take on a team leadership role in current position",
+              "Develop data analysis skills through online courses",
+              "Network with professionals in target role",
+              "Create 2-3 portfolio projects demonstrating key skills"
+            ]
+          },
+          {
+            title: "Mid-term (6-18 months)",
+            tasks: [
+              "Obtain relevant industry certification",
+              "Seek a role with more responsibility in current field",
+              "Contribute to cross-functional projects to build experience",
+              "Develop mentorship relationships with senior professionals",
+              "Present at industry events or webinars to build visibility"
+            ]
+          },
+          {
+            title: "Long-term (18+ months)",
+            tasks: [
+              "Apply for transitional roles that bridge current and target positions",
+              "Complete advanced training specific to target role",
+              "Build a portfolio showcasing relevant accomplishments",
+              "Develop expertise in emerging industry trends",
+              "Target companies with clear advancement paths to your goal"
+            ]
+          }
+        ],
+        recommendedResources: [
+          "LinkedIn Learning: 'Path to becoming a " + targetJobTitle + "'",
+          "Coursera Professional Certificate in related field",
+          "Industry-specific conferences and networking events",
+          "Professional association membership",
+          "Recommended books and thought leaders to follow"
+        ]
+      });
+      
+      setIsGeneratingRoadmap(false);
+    }, 3000);
+  };
+  
+  // Handle downloading career roadmap as PDF
+  const handleDownloadRoadmap = () => {
+    setIsDownloading(true);
+    
+    setTimeout(() => {
+      if (roadmapRef.current) {
+        // Create a PDF representation using HTML2Canvas and jsPDF
+        import('html2canvas')
+          .then(html2canvas => html2canvas.default(roadmapRef.current!))
+          .then(canvas => {
+            import('jspdf').then(({ default: jsPDF }) => {
+              const pdf = new jsPDF('p', 'mm', 'a4');
+              const imgData = canvas.toDataURL('image/png');
+              const imgWidth = 210; // A4 width in mm
+              const imgHeight = (canvas.height * imgWidth) / canvas.width;
+              
+              pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+              pdf.save(`Career_Roadmap_${currentJobTitle}_to_${targetJobTitle}.pdf`.replace(/\s+/g, '_'));
+              setIsDownloading(false);
+            });
+          });
+      } else {
+        alert("PDF generation failed. Please try again.");
+        setIsDownloading(false);
+      }
+    }, 1000);
   };
 
   return (
@@ -31,36 +135,46 @@ function UpskillNavigator() {
         <aside className="left-sidebar">
           <nav className="nav-menu">
             <ul>
-              <li className="nav-item">
-                <span className="nav-icon mic-icon"></span>
+              <li className="nav-item" onClick={() => window.location.href = '/resume-ai'} style={{ cursor: 'pointer' }}>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>📄</span>
+                </span>
                 <span className="nav-text">Resume AI</span>
               </li>
               <li className="nav-item active">
-                <span className="nav-icon briefcase-icon"></span>
-                <span className="nav-text">Upskill Navigator</span>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>📚</span>
+                </span>
+                <span className="nav-text">SkillUp AI</span>
+              </li>
+              <li className="nav-item" onClick={() => window.location.href = '/project-ideas-ai'} style={{ cursor: 'pointer' }}>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>📂</span>
+                </span>
+                <span className="nav-text">ProjectIdeas AI</span>
+              </li>
+              <li className="nav-item" onClick={() => window.location.href = '/interview-ready-ai'} style={{ cursor: 'pointer' }}>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>🎯</span>
+                </span>
+                <span className="nav-text">InterviewReady AI</span>
+              </li>
+              <li className="nav-item" onClick={() => window.location.href = '/'} style={{ cursor: 'pointer' }}>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>👥</span>
+                </span>
+                <span className="nav-text">MentorMatch AI</span>
               </li>
               <li className="nav-item">
-                <span className="nav-icon building-icon"></span>
-                <span className="nav-text">Companies</span>
-              </li>
-              <li className="nav-item">
-                <span className="nav-icon group-icon"></span>
-                <span className="nav-text">Community</span>
-              </li>
-              <li className="nav-item">
-                <span className="nav-icon post-icon"></span>
-                <span className="nav-text">Career Resources</span>
-              </li>
-              <li className="nav-item">
-                <span className="nav-icon network-icon"></span>
-                <span className="nav-text">Mentorship</span>
-              </li>
-              <li className="nav-item">
-                <span className="nav-icon calendar-icon"></span>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>📅</span>
+                </span>
                 <span className="nav-text">Events</span>
               </li>
               <li className="nav-item">
-                <span className="nav-icon grid-icon"></span>
+                <span className="nav-icon">
+                  <span style={{ fontSize: "22px" }}>📊</span>
+                </span>
                 <span className="nav-text">More</span>
               </li>
             </ul>
@@ -84,7 +198,7 @@ function UpskillNavigator() {
 
         {/* Main Content */}
         <main className="main-content">
-          {/* Upskill Navigator Hero Section */}
+          {/* SkillUp AI Hero Section */}
           <section className="featured-jobs">
             <h2>Master In-Demand Skills</h2>
             <div className="job-card" style={{ padding: "25px" }}>
@@ -112,233 +226,117 @@ function UpskillNavigator() {
           {/* Career Roadmap Section */}
           <section className="featured-jobs">
             <h2>Create Your Career Roadmap</h2>
-            <div className="job-card" style={{ padding: "25px" }}>
-              <p style={{ marginBottom: "15px", fontSize: "14px", color: "var(--text-gray)" }}>
+            <div className="job-card" style={{ padding: "20px" }}>
+              <p style={{ marginBottom: "15px", color: "var(--text-gray)" }}>
                 Get a personalized career development path with skills to acquire and milestones to achieve. 
-                Our AI analyzes your current skills, experience, and career goals to create a personalized 
-                roadmap for your professional development.
+                Our AI analyzes your current skills, experience, and career goals to create 
+                a personalized roadmap for your professional development.
               </p>
               
-              <h4 style={{ marginBottom: "15px", fontSize: "16px" }}>Your Career Roadmap Includes:</h4>
-              <ul style={{ 
-                marginLeft: "20px", 
-                marginBottom: "20px", 
-                fontSize: "14px", 
-                color: "var(--text-gray)",
-                listStyleType: "disc" 
+              <div style={{ 
+                background: "var(--primary-light)", 
+                padding: "20px", 
+                borderRadius: "8px",
+                marginBottom: "20px" 
               }}>
-                <li style={{ marginBottom: "8px" }}>Skill gap analysis for your target roles</li>
-                <li style={{ marginBottom: "8px" }}>Recommended learning resources and certifications</li>
-                <li style={{ marginBottom: "8px" }}>Timeline with achievable milestones</li>
-                <li style={{ marginBottom: "8px" }}>Industry trends and emerging skills in your field</li>
-                <li style={{ marginBottom: "8px" }}>Alternative career paths based on your transferable skills</li>
-              </ul>
-              
-              <h4 style={{ marginBottom: "10px", fontSize: "16px" }}>Enter Your Current and Target Job Titles:</h4>
-              <div style={{ display: "flex", gap: "15px", marginBottom: "20px" }}>
-                <input 
-                  type="text" 
-                  placeholder="Current job title, e.g., Software Developer" 
-                  style={{ 
-                    flex: 1,
-                    padding: "10px", 
-                    borderRadius: "5px",
-                    border: "1px solid var(--border-light)" 
-                  }}
-                />
-                <input 
-                  type="text" 
-                  placeholder="Target job title, e.g., Data Analyst" 
-                  style={{ 
-                    flex: 1,
-                    padding: "10px", 
-                    borderRadius: "5px",
-                    border: "1px solid var(--border-light)" 
-                  }}
-                />
+                <h4 style={{ marginBottom: "15px" }}>Your Career Roadmap Includes:</h4>
+                <ul style={{ marginLeft: "20px", marginBottom: "15px", fontSize: "14px", color: "var(--text-gray)" }}>
+                  <li style={{ marginBottom: "10px" }}>Skill gap analysis for your target roles</li>
+                  <li style={{ marginBottom: "10px" }}>Recommended learning resources and certifications</li>
+                  <li style={{ marginBottom: "10px" }}>Timeline with achievable milestones</li>
+                  <li style={{ marginBottom: "10px" }}>Industry trends and emerging skills in your field</li>
+                  <li style={{ marginBottom: "10px" }}>Alternative career paths based on your transferable skills</li>
+                </ul>
               </div>
               
-              <button 
-                className="update-btn" 
-                style={{ 
-                  background: "var(--primary)", 
-                  borderRadius: "8px",
-                  padding: "10px 20px"
-                }}
-              >
-                Generate Career Roadmap
-              </button>
-              
-              {/* Sample Career Roadmap Result */}
-              <div style={{ 
-                marginTop: "25px", 
-                border: "1px solid var(--border-light)", 
-                borderRadius: "8px", 
-                padding: "25px" 
-              }}>
-                <h3 style={{ marginBottom: "20px", fontSize: "18px", textAlign: "center" }}>Your Career Roadmap:</h3>
-                
-                <div style={{ 
-                  display: "grid", 
-                  gridTemplateColumns: "repeat(3, 1fr)", 
-                  gap: "15px", 
-                  marginBottom: "25px",
-                  background: "#f9f9f9",
-                  padding: "15px",
-                  borderRadius: "8px"
-                }}>
-                  <div>
-                    <p style={{ fontSize: "14px", fontWeight: "bold" }}>Current Role:</p>
-                    <p style={{ fontSize: "16px" }}>Software Developer</p>
-                  </div>
-                  <div>
-                    <p style={{ fontSize: "14px", fontWeight: "bold" }}>Target Role:</p>
-                    <p style={{ fontSize: "16px" }}>Data Analyst</p>
-                  </div>
-                  <div>
-                    <p style={{ fontSize: "14px", fontWeight: "bold" }}>Estimated Time:</p>
-                    <p style={{ fontSize: "16px" }}>2-3 years</p>
-                  </div>
-                </div>
-                
-                <div style={{ marginBottom: "25px" }}>
-                  <h4 style={{ 
-                    marginBottom: "15px", 
-                    fontSize: "16px", 
-                    borderBottom: "1px solid var(--border-light)",
-                    paddingBottom: "8px"
-                  }}>Skill Gaps:</h4>
-                  <ul style={{ 
-                    listStyleType: "disc", 
-                    paddingLeft: "25px", 
-                    fontSize: "14px",
-                    display: "grid",
-                    gridTemplateColumns: "repeat(2, 1fr)",
-                    gap: "8px 20px"
-                  }}>
-                    <li>Advanced data analytics</li>
-                    <li>Project management certification</li>
-                    <li>Leadership experience</li>
-                    <li>Strategic planning</li>
-                    <li>Industry-specific knowledge</li>
-                  </ul>
-                </div>
-                
-                <div style={{ marginBottom: "25px" }}>
-                  <h4 style={{ 
-                    marginBottom: "15px", 
-                    fontSize: "16px", 
-                    borderBottom: "1px solid var(--border-light)",
-                    paddingBottom: "8px"
-                  }}>Milestones:</h4>
-                  
-                  <div style={{ marginBottom: "20px" }}>
-                    <h5 style={{ 
-                      fontWeight: "bold", 
-                      marginBottom: "10px", 
-                      fontSize: "15px",
-                      backgroundColor: "#f0f7ff",
-                      padding: "8px 15px",
-                      borderRadius: "5px",
-                      display: "inline-block"
-                    }}>Short-term (0-6 months)</h5>
-                    <ul style={{ 
-                      listStyleType: "disc", 
-                      paddingLeft: "25px", 
-                      fontSize: "14px",
-                      lineHeight: "1.6"
-                    }}>
-                      <li>Complete a certified project management course</li>
-                      <li>Take on a team leadership role in current position</li>
-                      <li>Develop data analysis skills through online courses</li>
-                      <li>Network with professionals in target role</li>
-                      <li>Create 2-3 portfolio projects demonstrating key skills</li>
-                    </ul>
-                  </div>
-                  
-                  <div style={{ marginBottom: "20px" }}>
-                    <h5 style={{ 
-                      fontWeight: "bold", 
-                      marginBottom: "10px", 
-                      fontSize: "15px",
-                      backgroundColor: "#fff8e1",
-                      padding: "8px 15px",
-                      borderRadius: "5px",
-                      display: "inline-block"
-                    }}>Mid-term (6-18 months)</h5>
-                    <ul style={{ 
-                      listStyleType: "disc", 
-                      paddingLeft: "25px", 
-                      fontSize: "14px",
-                      lineHeight: "1.6"
-                    }}>
-                      <li>Obtain relevant industry certification</li>
-                      <li>Seek a role with more responsibility in current field</li>
-                      <li>Contribute to cross-functional projects to build experience</li>
-                      <li>Develop mentorship relationships with senior professionals</li>
-                      <li>Present at industry events or webinars to build visibility</li>
-                    </ul>
-                  </div>
-                  
-                  <div style={{ marginBottom: "20px" }}>
-                    <h5 style={{ 
-                      fontWeight: "bold", 
-                      marginBottom: "10px", 
-                      fontSize: "15px",
-                      backgroundColor: "#f1f8e9",
-                      padding: "8px 15px",
-                      borderRadius: "5px",
-                      display: "inline-block"
-                    }}>Long-term (18+ months)</h5>
-                    <ul style={{ 
-                      listStyleType: "disc", 
-                      paddingLeft: "25px", 
-                      fontSize: "14px",
-                      lineHeight: "1.6"
-                    }}>
-                      <li>Apply for transitional roles that bridge current and target positions</li>
-                      <li>Complete advanced training specific to target role</li>
-                      <li>Build a portfolio showcasing relevant accomplishments</li>
-                      <li>Develop expertise in emerging industry trends</li>
-                      <li>Target companies with clear advancement paths to your goal</li>
-                    </ul>
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 style={{ 
-                    marginBottom: "15px", 
-                    fontSize: "16px", 
-                    borderBottom: "1px solid var(--border-light)",
-                    paddingBottom: "8px"
-                  }}>Recommended Resources:</h4>
-                  <ul style={{ 
-                    listStyleType: "disc", 
-                    paddingLeft: "25px", 
-                    fontSize: "14px",
-                    lineHeight: "1.6"
-                  }}>
-                    <li>LinkedIn Learning: 'Path to becoming a Data Analyst'</li>
-                    <li>Coursera Professional Certificate in related field</li>
-                    <li>Industry-specific conferences and networking events</li>
-                    <li>Professional association membership</li>
-                    <li>Recommended books and thought leaders to follow</li>
-                  </ul>
-                </div>
-                
-                <div style={{ marginTop: "25px", textAlign: "center" }}>
-                  <button 
-                    className="update-btn" 
+              <div style={{ marginTop: "20px", padding: "15px", background: "var(--primary-light)", borderRadius: "8px" }}>
+                <h4 style={{ marginBottom: "10px" }}>Enter Your Current and Target Job Titles:</h4>
+                <input 
+                  type="text"
+                  placeholder="Current Job Title"
+                  style={{ 
+                    width: "100%", 
+                    padding: "10px", 
+                    borderRadius: "5px",
+                    border: "1px solid var(--border-light)",
+                    marginBottom: "15px"
+                  }}
+                  value={currentJobTitle}
+                  onChange={(e) => setCurrentJobTitle(e.target.value)}
+                />
+                <input 
+                  type="text"
+                  placeholder="Target Job Title"
+                  style={{ 
+                    width: "100%", 
+                    padding: "10px", 
+                    borderRadius: "5px",
+                    border: "1px solid var(--border-light)",
+                    marginBottom: "15px"
+                  }}
+                  value={targetJobTitle}
+                  onChange={(e) => setTargetJobTitle(e.target.value)}
+                />
+                <button 
+                  className="update-btn" 
+                  onClick={handleGenerateCareerRoadmap}
+                  disabled={isGeneratingRoadmap}
+                >
+                  {isGeneratingRoadmap ? "Generating..." : "Generate Career Roadmap"}
+                </button>
+              </div>
+
+              {careerRoadmap && (
+                <div style={{ marginTop: "20px" }}>
+                  <h4 style={{ marginBottom: "15px" }}>Your Career Roadmap:</h4>
+                  <div 
+                    ref={roadmapRef}
                     style={{ 
-                      padding: "10px 20px", 
-                      fontSize: "15px",
-                      borderRadius: "8px"
+                      border: "1px solid var(--border-light)",
+                      borderRadius: "8px",
+                      padding: "20px",
+                      background: "white",
+                      marginBottom: "20px"
                     }}
                   >
-                    Download Career Roadmap
-                  </button>
+                    <h5 style={{ marginBottom: "10px", fontSize: "16px", color: "#333" }}>Current Role: {careerRoadmap.currentRole}</h5>
+                    <h5 style={{ marginBottom: "10px", fontSize: "16px", color: "#333" }}>Target Role: {careerRoadmap.targetRole}</h5>
+                    <p style={{ marginBottom: "10px", fontSize: "14px", color: "#333" }}>Estimated Time: {careerRoadmap.timeEstimate}</p>
+                    <p style={{ marginBottom: "10px", fontSize: "14px", color: "#333" }}>Skill Gaps:</p>
+                    <ul style={{ marginBottom: "15px", fontSize: "14px", color: "#333" }}>
+                      {careerRoadmap.skillGaps.map((skill: string, index: number) => (
+                        <li key={index} style={{ marginBottom: "5px" }}>{skill}</li>
+                      ))}
+                    </ul>
+                    <p style={{ marginBottom: "10px", fontSize: "14px", color: "#333" }}>Milestones:</p>
+                    {careerRoadmap.milestones.map((milestone: any, index: number) => (
+                      <div key={index} style={{ marginBottom: "15px" }}>
+                        <h6 style={{ marginBottom: "5px", fontSize: "14px", color: "#333" }}>{milestone.title}</h6>
+                        <ul style={{ marginBottom: "10px", fontSize: "14px", color: "#333" }}>
+                          {milestone.tasks.map((task: string, idx: number) => (
+                            <li key={idx} style={{ marginBottom: "5px" }}>{task}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                    <p style={{ marginBottom: "10px", fontSize: "14px", color: "#333" }}>Recommended Resources:</p>
+                    <ul style={{ marginBottom: "15px", fontSize: "14px", color: "#333" }}>
+                      {careerRoadmap.recommendedResources.map((resource: string, index: number) => (
+                        <li key={index} style={{ marginBottom: "5px" }}>{resource}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div style={{ display: "flex", gap: "15px" }}>
+                    <button 
+                      className="update-btn"
+                      onClick={handleDownloadRoadmap}
+                      disabled={isDownloading}
+                    >
+                      {isDownloading ? "Preparing PDF..." : "Download Career Roadmap"}
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </section>
 
@@ -626,4 +624,4 @@ function UpskillNavigator() {
   );
 }
 
-export default UpskillNavigator;
+export default SkillUpAI;

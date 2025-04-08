@@ -408,7 +408,7 @@ function ResumeAI() {
     setTimeout(() => {
       // In a real app, we would send the job description and resume to an API
       const sampleCoverLetter = `
-April 5, 2025
+[your_date]
 
 Hiring Manager
 [Company Name]
@@ -426,7 +426,7 @@ I am excited about the possibility of bringing my skills in product strategy, da
 Thank you for considering my application. I look forward to the possibility of working together.
 
 Sincerely,
-Ishita Koradia
+[your_name]
       `;
       
       setCoverLetterContent(sampleCoverLetter);

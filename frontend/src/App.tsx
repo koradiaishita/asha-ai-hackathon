@@ -1,8 +1,10 @@
 import './App.css'
 import { ChatWidget } from './components/ChatWidget'
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import ProjectIdeasAI from './pages/ProjectIdeasAI'
+import InterviewReadyAI from './pages/InterviewReadyAI'
 import ResumeAI from './pages/ResumeAI'
-import UpskillNavigator from './pages/UpskillNavigator'
+import SkillUpAI from './pages/SkillUpAI'
 // Import Material UI icons
 import HomeIcon from '@mui/icons-material/Home'
 import DescriptionIcon from '@mui/icons-material/Description'
@@ -27,15 +29,7 @@ import WbSunnyIcon from '@mui/icons-material/WbSunny'
 import AppsIcon from '@mui/icons-material/Apps'
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/resume-ai" element={<ResumeAI />} />
-        <Route path="/upskill-navigator" element={<UpskillNavigator />} />
-      </Routes>
-    </Router>
-  )
+  return <HomePage />;
 }
 
 // HomePage component for the main landing page
@@ -77,28 +71,28 @@ function HomePage() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/upskill-navigator" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
+                <Link to="/skillup-ai" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
                   <BusinessCenterIcon className="nav-icon" />
-                  <span className="nav-text">Upskill Navigator</span>
+                  <span className="nav-text">SkillUp AI</span>
                 </Link>
               </li>
               <li className="nav-item">
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Link to="/project-ideas-ai" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
                   <FolderSpecialIcon className="nav-icon" />
-                  <span className="nav-text">Projects</span>
-                </div>
+                  <span className="nav-text">ProjectIdeas AI</span>
+                </Link>
               </li>
               <li className="nav-item">
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Link to="/interview-ready-ai" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
                   <GroupIcon className="nav-icon" />
-                  <span className="nav-text">Interview AI</span>
-                </div>
+                  <span className="nav-text">InterviewReadyAI</span>
+                </Link>
               </li>
               <li className="nav-item">
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Link to="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
                   <SchoolIcon className="nav-icon" />
-                  <span className="nav-text">Mentorship</span>
-                </div>
+                  <span className="nav-text">MentorMatch AI</span>
+                </Link>
               </li>
               <li className="nav-item">
                 <div style={{ display: 'flex', alignItems: 'center' }}>

@@ -175,6 +175,9 @@ function InterviewReadyAI() {
             className="search-input" 
           />
         </div>
+        <button onClick={navigateToHome} style={{ marginRight: "15px", background: "transparent", border: "none", cursor: "pointer", fontSize: "20px" }}>
+          ← Home
+        </button>
         <button className="sign-up-btn">Sign Up</button>
       </header>
 

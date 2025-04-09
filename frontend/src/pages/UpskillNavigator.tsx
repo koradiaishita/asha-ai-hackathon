@@ -1,11 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ChatWidget } from '../components/ChatWidget';
 import '../App.css';
 
 function UpskillNavigator() {
+  // States for courses and course interactions
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [courseEnrollments, setCourseEnrollments] = useState<string[]>([]);
+
   // Add a navigation handler that will be implemented when router is installed
   const navigateToHome = () => {
     window.location.href = '/'; // Simple navigation without router
+  };
+
+  // Handle Browse Courses button click
+  const handleBrowseCourses = () => {
+    // Scroll to the Featured Courses section
+    const coursesSection = document.querySelector('.featured-jobs h2:contains("Featured Courses")');
+    if (coursesSection) {
+      coursesSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      alert("Explore our featured courses to enhance your skills!");
+    }
+  };
+
+  // Handle Enroll Now button click for a specific course
+  const handleEnrollNow = (courseName: string) => {
+    // Check if course is already enrolled
+    if (courseEnrollments.includes(courseName)) {
+      alert(`You are already enrolled in ${courseName}!`);
+    } else {
+      // Add course to enrollments
+      setCourseEnrollments([...courseEnrollments, courseName]);
+      alert(`Successfully enrolled in ${courseName}! Your learning journey begins now.`);
+    }
+  };
+
+  // Handle category selection
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+    alert(`You selected the ${category} category. Showing ${category} courses...`);
+    // In a real app, this would filter courses by category
   };
 
   return (
@@ -23,6 +57,9 @@ function UpskillNavigator() {
             className="search-input" 
           />
         </div>
+        <button onClick={navigateToHome} style={{ marginRight: "15px", background: "transparent", border: "none", cursor: "pointer", fontSize: "20px" }}>
+          ← Home
+        </button>
         <button className="sign-up-btn">Sign Up</button>
       </header>
 
@@ -87,10 +124,19 @@ function UpskillNavigator() {
           {/* Upskill Navigator Hero Section */}
           <section className="featured-jobs">
             <h2>Master In-Demand Skills</h2>
-            <div className="job-card" style={{ padding: "25px" }}>
+            <div className="job-card" style={{ 
+              padding: "30px", 
+              background: "linear-gradient(to right, var(--primary-light), #f0f7ff)",
+              borderRadius: "10px" 
+            }}>
               <div className="job-info">
-                <h3 className="job-title">Access premium courses and start your learning journey today</h3>
-                <div style={{ marginTop: "20px" }}>
+                <h3 className="job-title" style={{ fontSize: "24px", marginBottom: "15px" }}>
+                  Access premium courses and start your learning journey today
+                </h3>
+                <p style={{ marginBottom: "20px", fontSize: "16px", color: "var(--text-gray)" }}>
+                  Gain in-demand skills that employers are looking for and advance your career with our curated learning paths.
+                </p>
+                <div style={{ display: "flex", gap: "15px" }}>
                   <button 
                     className="update-btn" 
                     style={{ 
@@ -98,11 +144,28 @@ function UpskillNavigator() {
                       alignItems: "center", 
                       background: "var(--primary)", 
                       borderRadius: "8px",
-                      padding: "10px 20px"
+                      padding: "12px 25px",
+                      fontSize: "16px"
                     }}
+                    onClick={handleBrowseCourses}
                   >
                     <span>Browse Courses</span>
                     <span style={{ marginLeft: "10px", fontSize: "18px" }}>→</span>
+                  </button>
+                  <button 
+                    style={{ 
+                      display: "flex", 
+                      alignItems: "center", 
+                      background: "transparent", 
+                      border: "1px solid var(--primary)",
+                      color: "var(--primary)",
+                      borderRadius: "8px",
+                      padding: "12px 25px",
+                      fontSize: "16px",
+                      cursor: "pointer"
+                    }}
+                  >
+                    <span>Take Skill Assessment</span>
                   </button>
                 </div>
               </div>
@@ -112,13 +175,20 @@ function UpskillNavigator() {
           {/* Career Roadmap Section */}
           <section className="featured-jobs">
             <h2>Create Your Career Roadmap</h2>
-            <div className="job-card" style={{ padding: "25px" }}>
+            <div className="job-card" style={{ padding: "25px", marginBottom: "20px" }}>
               <p style={{ marginBottom: "15px", fontSize: "14px", color: "var(--text-gray)" }}>
                 Get a personalized career development path with skills to acquire and milestones to achieve. 
                 Our AI analyzes your current skills, experience, and career goals to create a personalized 
                 roadmap for your professional development.
               </p>
-              
+            </div>
+
+            <div className="job-card" style={{ 
+              padding: "25px",
+              background: "var(--primary-light)", 
+              borderRadius: "8px",
+              marginBottom: "20px" 
+            }}>
               <h4 style={{ marginBottom: "15px", fontSize: "16px" }}>Your Career Roadmap Includes:</h4>
               <ul style={{ 
                 marginLeft: "20px", 
@@ -133,7 +203,9 @@ function UpskillNavigator() {
                 <li style={{ marginBottom: "8px" }}>Industry trends and emerging skills in your field</li>
                 <li style={{ marginBottom: "8px" }}>Alternative career paths based on your transferable skills</li>
               </ul>
+            </div>
               
+            <div className="job-card" style={{ padding: "25px" }}>
               <h4 style={{ marginBottom: "10px", fontSize: "16px" }}>Enter Your Current and Target Job Titles:</h4>
               <div style={{ display: "flex", gap: "15px", marginBottom: "20px" }}>
                 <input 
@@ -344,126 +416,264 @@ function UpskillNavigator() {
 
           {/* Stats Section */}
           <section className="featured-jobs">
+            <h2>Our Learning Impact</h2>
             <div style={{ 
               display: "grid", 
               gridTemplateColumns: "repeat(4, 1fr)", 
               gap: "15px", 
               marginTop: "15px" 
             }}>
-              <div className="job-card" style={{ padding: "20px", textAlign: "center" }}>
-                <div style={{ fontSize: "28px", marginBottom: "15px" }}>⏱️</div>
-                <h3 style={{ marginBottom: "10px", fontSize: "16px", color: "#333" }}>Learning Hours</h3>
-                <p style={{ fontSize: "24px", fontWeight: "bold", color: "var(--primary)" }}>2k+</p>
+              <div className="job-card" style={{ 
+                padding: "25px", 
+                textAlign: "center",
+                border: "1px solid #e6f2ff",
+                boxShadow: "0 3px 10px rgba(0,0,0,0.05)",
+                transition: "transform 0.3s ease",
+                cursor: "pointer",
+                ":hover": { transform: "translateY(-5px)" }
+              }}>
+                <div style={{ fontSize: "36px", marginBottom: "15px", color: "var(--primary)" }}>⏱️</div>
+                <h3 style={{ marginBottom: "10px", fontSize: "18px", color: "#333" }}>Learning Hours</h3>
+                <p style={{ fontSize: "28px", fontWeight: "bold", color: "var(--primary)" }}>2k+</p>
+                <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px" }}>Hours of quality content</p>
               </div>
               
-              <div className="job-card" style={{ padding: "20px", textAlign: "center" }}>
-                <div style={{ fontSize: "28px", marginBottom: "15px" }}>🏆</div>
-                <h3 style={{ marginBottom: "10px", fontSize: "16px", color: "#333" }}>Success Stories</h3>
-                <p style={{ fontSize: "24px", fontWeight: "bold", color: "var(--primary)" }}>50+</p>
+              <div className="job-card" style={{ 
+                padding: "25px", 
+                textAlign: "center",
+                border: "1px solid #e6f2ff",
+                boxShadow: "0 3px 10px rgba(0,0,0,0.05)",
+                transition: "transform 0.3s ease",
+                cursor: "pointer"
+              }}>
+                <div style={{ fontSize: "36px", marginBottom: "15px", color: "var(--primary)" }}>🏆</div>
+                <h3 style={{ marginBottom: "10px", fontSize: "18px", color: "#333" }}>Success Stories</h3>
+                <p style={{ fontSize: "28px", fontWeight: "bold", color: "var(--primary)" }}>50+</p>
+                <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px" }}>Career transformations</p>
               </div>
               
-              <div className="job-card" style={{ padding: "20px", textAlign: "center" }}>
-                <div style={{ fontSize: "28px", marginBottom: "15px" }}>📚</div>
-                <h3 style={{ marginBottom: "10px", fontSize: "16px", color: "#333" }}>Topics</h3>
-                <p style={{ fontSize: "24px", fontWeight: "bold", color: "var(--primary)" }}>15+</p>
+              <div className="job-card" style={{ 
+                padding: "25px", 
+                textAlign: "center",
+                border: "1px solid #e6f2ff",
+                boxShadow: "0 3px 10px rgba(0,0,0,0.05)",
+                transition: "transform 0.3s ease",
+                cursor: "pointer"
+              }}>
+                <div style={{ fontSize: "36px", marginBottom: "15px", color: "var(--primary)" }}>📚</div>
+                <h3 style={{ marginBottom: "10px", fontSize: "18px", color: "#333" }}>Topics</h3>
+                <p style={{ fontSize: "28px", fontWeight: "bold", color: "var(--primary)" }}>15+</p>
+                <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px" }}>In-demand skill areas</p>
               </div>
               
-              <div className="job-card" style={{ padding: "20px", textAlign: "center" }}>
-                <div style={{ fontSize: "28px", marginBottom: "15px" }}>💫</div>
-                <h3 style={{ marginBottom: "10px", fontSize: "16px", color: "#333" }}>Avg. Salary Hike</h3>
-                <p style={{ fontSize: "24px", fontWeight: "bold", color: "var(--primary)" }}>3.2x</p>
+              <div className="job-card" style={{ 
+                padding: "25px", 
+                textAlign: "center",
+                border: "1px solid #e6f2ff",
+                boxShadow: "0 3px 10px rgba(0,0,0,0.05)",
+                transition: "transform 0.3s ease",
+                cursor: "pointer"
+              }}>
+                <div style={{ fontSize: "36px", marginBottom: "15px", color: "var(--primary)" }}>💫</div>
+                <h3 style={{ marginBottom: "10px", fontSize: "18px", color: "#333" }}>Avg. Salary Hike</h3>
+                <p style={{ fontSize: "28px", fontWeight: "bold", color: "var(--primary)" }}>3.2x</p>
+                <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px" }}>After completing courses</p>
               </div>
             </div>
           </section>
 
           {/* Featured Courses */}
           <section className="featured-jobs">
-            <div className="section-header" style={{ display: "flex", justifyContent: "space-between", marginBottom: "15px" }}>
+            <div className="section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <h2>Featured Courses</h2>
-              <span style={{ color: "var(--primary)", cursor: "pointer" }}>View all →</span>
+              <span style={{ color: "var(--primary)", cursor: "pointer", display: "flex", alignItems: "center" }}>
+                View all courses <span style={{ marginLeft: "5px", fontSize: "18px" }}>→</span>
+              </span>
             </div>
             
             <div style={{ 
               display: "grid", 
               gridTemplateColumns: "repeat(3, 1fr)", 
-              gap: "15px"
+              gap: "20px"
             }}>
               {/* Course Card 1 */}
-              <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
-                <div style={{ height: "150px", background: "#f5f5f5", position: "relative" }}>
+              <div className="job-card" style={{ 
+                padding: "0", 
+                overflow: "hidden", 
+                border: "1px solid #eee",
+                borderRadius: "10px",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                cursor: "pointer",
+                ":hover": { transform: "translateY(-5px)", boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }
+              }}>
+                <div style={{ 
+                  height: "160px", 
+                  background: "linear-gradient(135deg, #4b6cb7, #182848)", 
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <div style={{ fontSize: "50px" }}>📊</div>
                   <div style={{ 
                     position: "absolute", 
-                    top: "10px", 
-                    right: "10px", 
+                    top: "15px", 
+                    right: "15px", 
                     background: "#fff", 
-                    borderRadius: "4px", 
-                    padding: "5px 10px",
+                    borderRadius: "20px", 
+                    padding: "5px 12px",
                     fontSize: "12px",
-                    fontWeight: "bold"
+                    fontWeight: "bold",
+                    boxShadow: "0 3px 8px rgba(0,0,0,0.1)"
                   }}>
                     Bestseller
                   </div>
                 </div>
-                <div style={{ padding: "15px" }}>
-                  <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Data Science Fundamentals</h3>
-                  <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Learn the basics of data analysis and visualization</p>
+                <div style={{ padding: "20px" }}>
+                  <span style={{ 
+                    fontSize: "12px", 
+                    background: "#f0f7ff", 
+                    color: "var(--primary)", 
+                    padding: "3px 10px", 
+                    borderRadius: "12px",
+                    display: "inline-block",
+                    marginBottom: "10px"
+                  }}>
+                    Data Science
+                  </span>
+                  <h3 style={{ marginBottom: "10px", fontSize: "18px" }}>Data Science Fundamentals</h3>
+                  <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "15px", lineHeight: "1.5" }}>
+                    Learn the basics of data analysis, visualization, and machine learning fundamentals
+                  </p>
+                  <div style={{ display: "flex", alignItems: "center", marginBottom: "15px" }}>
+                    <span style={{ marginRight: "10px", color: "#ffb400", fontSize: "16px" }}>★★★★☆</span>
+                    <span style={{ fontSize: "13px", color: "var(--text-gray)" }}>4.2 (1.2k reviews)</span>
+                  </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontWeight: "bold" }}>₹2,499</span>
-                    <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}>Enroll Now</button>
+                    <span style={{ fontWeight: "bold", fontSize: "18px" }}>₹2,499</span>
+                    <button className="update-btn" style={{ padding: "8px 15px", fontSize: "14px", borderRadius: "6px" }} onClick={() => handleEnrollNow('Data Science Fundamentals')}>Enroll Now</button>
                   </div>
                 </div>
               </div>
               
               {/* Course Card 2 */}
-              <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
-                <div style={{ height: "150px", background: "#f5f5f5", position: "relative" }}>
+              <div className="job-card" style={{ 
+                padding: "0", 
+                overflow: "hidden", 
+                border: "1px solid #eee",
+                borderRadius: "10px",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                cursor: "pointer",
+                ":hover": { transform: "translateY(-5px)", boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }
+              }}>
+                <div style={{ 
+                  height: "160px", 
+                  background: "linear-gradient(135deg, #667eea, #764ba2)", 
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <div style={{ fontSize: "50px" }}>💻</div>
                   <div style={{ 
                     position: "absolute", 
-                    top: "10px", 
-                    right: "10px", 
+                    top: "15px", 
+                    right: "15px", 
                     background: "#e8f5e9", 
-                    borderRadius: "4px", 
-                    padding: "5px 10px",
+                    borderRadius: "20px", 
+                    padding: "5px 12px",
                     fontSize: "12px",
                     fontWeight: "bold",
-                    color: "#4caf50"
+                    color: "#4caf50",
+                    boxShadow: "0 3px 8px rgba(0,0,0,0.1)"
                   }}>
                     New
                   </div>
                 </div>
-                <div style={{ padding: "15px" }}>
-                  <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Full-Stack Web Development</h3>
-                  <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Master modern web development technologies</p>
+                <div style={{ padding: "20px" }}>
+                  <span style={{ 
+                    fontSize: "12px", 
+                    background: "#f0f7ff", 
+                    color: "var(--primary)", 
+                    padding: "3px 10px", 
+                    borderRadius: "12px",
+                    display: "inline-block",
+                    marginBottom: "10px"
+                  }}>
+                    Web Development
+                  </span>
+                  <h3 style={{ marginBottom: "10px", fontSize: "18px" }}>Full-Stack Web Development</h3>
+                  <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "15px", lineHeight: "1.5" }}>
+                    Master modern web development technologies from frontend to backend
+                  </p>
+                  <div style={{ display: "flex", alignItems: "center", marginBottom: "15px" }}>
+                    <span style={{ marginRight: "10px", color: "#ffb400", fontSize: "16px" }}>★★★★★</span>
+                    <span style={{ fontSize: "13px", color: "var(--text-gray)" }}>4.8 (856 reviews)</span>
+                  </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontWeight: "bold" }}>₹3,999</span>
-                    <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}>Enroll Now</button>
+                    <span style={{ fontWeight: "bold", fontSize: "18px" }}>₹3,999</span>
+                    <button className="update-btn" style={{ padding: "8px 15px", fontSize: "14px", borderRadius: "6px" }} onClick={() => handleEnrollNow('Full-Stack Web Development')}>Enroll Now</button>
                   </div>
                 </div>
               </div>
               
               {/* Course Card 3 */}
-              <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
-                <div style={{ height: "150px", background: "#f5f5f5", position: "relative" }}>
+              <div className="job-card" style={{ 
+                padding: "0", 
+                overflow: "hidden", 
+                border: "1px solid #eee",
+                borderRadius: "10px",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                cursor: "pointer",
+                ":hover": { transform: "translateY(-5px)", boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }
+              }}>
+                <div style={{ 
+                  height: "160px", 
+                  background: "linear-gradient(135deg, #ff9a9e, #fad0c4)", 
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <div style={{ fontSize: "50px" }}>🎨</div>
                   <div style={{ 
                     position: "absolute", 
-                    top: "10px", 
-                    right: "10px", 
+                    top: "15px", 
+                    right: "15px", 
                     background: "#fff3e0", 
-                    borderRadius: "4px", 
-                    padding: "5px 10px",
+                    borderRadius: "20px", 
+                    padding: "5px 12px",
                     fontSize: "12px",
                     fontWeight: "bold",
-                    color: "#ff9800"
+                    color: "#ff9800",
+                    boxShadow: "0 3px 8px rgba(0,0,0,0.1)"
                   }}>
                     Popular
                   </div>
                 </div>
-                <div style={{ padding: "15px" }}>
-                  <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>UX/UI Design Essentials</h3>
-                  <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Create beautiful, user-friendly interfaces</p>
+                <div style={{ padding: "20px" }}>
+                  <span style={{ 
+                    fontSize: "12px", 
+                    background: "#f0f7ff", 
+                    color: "var(--primary)", 
+                    padding: "3px 10px", 
+                    borderRadius: "12px",
+                    display: "inline-block",
+                    marginBottom: "10px"
+                  }}>
+                    Design
+                  </span>
+                  <h3 style={{ marginBottom: "10px", fontSize: "18px" }}>UX/UI Design Essentials</h3>
+                  <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "15px", lineHeight: "1.5" }}>
+                    Create beautiful, user-friendly interfaces that delight users
+                  </p>
+                  <div style={{ display: "flex", alignItems: "center", marginBottom: "15px" }}>
+                    <span style={{ marginRight: "10px", color: "#ffb400", fontSize: "16px" }}>★★★★☆</span>
+                    <span style={{ fontSize: "13px", color: "var(--text-gray)" }}>4.5 (732 reviews)</span>
+                  </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontWeight: "bold" }}>₹2,999</span>
-                    <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}>Enroll Now</button>
+                    <span style={{ fontWeight: "bold", fontSize: "18px" }}>₹2,999</span>
+                    <button className="update-btn" style={{ padding: "8px 15px", fontSize: "14px", borderRadius: "6px" }} onClick={() => handleEnrollNow('UX/UI Design Essentials')}>Enroll Now</button>
                   </div>
                 </div>
               </div>
@@ -472,107 +682,272 @@ function UpskillNavigator() {
           
           {/* Popular Categories */}
           <section className="featured-jobs">
-            <h2>Popular Categories</h2>
+            <div className="section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+              <h2>Popular Categories</h2>
+              <span style={{ color: "var(--primary)", cursor: "pointer", display: "flex", alignItems: "center" }}>
+                Explore all categories <span style={{ marginLeft: "5px", fontSize: "18px" }}>→</span>
+              </span>
+            </div>
             <div style={{ 
               display: "grid", 
               gridTemplateColumns: "repeat(4, 1fr)", 
-              gap: "15px",
+              gap: "20px",
               marginTop: "15px"
             }}>
-              <div className="job-card" style={{ 
-                padding: "20px", 
-                display: "flex", 
-                flexDirection: "column", 
-                alignItems: "center", 
-                justifyContent: "center",
-                cursor: "pointer"
-              }}>
-                <div style={{ fontSize: "28px", marginBottom: "10px" }}>💻</div>
-                <h3 style={{ textAlign: "center", fontSize: "15px" }}>Technology</h3>
+              <div 
+                className="job-card" 
+                style={{ 
+                  padding: "25px", 
+                  display: "flex", 
+                  flexDirection: "column", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  border: "1px solid #e6f2ff",
+                  borderRadius: "10px",
+                  background: selectedCategory === "Technology" ? "linear-gradient(to bottom, #e6f2ff, #ffffff)" : "linear-gradient(to bottom, #f8faff, #ffffff)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  boxShadow: selectedCategory === "Technology" ? "0 10px 20px rgba(0,0,0,0.08)" : "none"
+                }}
+                onClick={() => handleCategorySelect("Technology")}
+              >
+                <div style={{ 
+                  fontSize: "40px", 
+                  marginBottom: "15px",
+                  background: "#f0f7ff",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>💻</div>
+                <h3 style={{ textAlign: "center", fontSize: "16px", fontWeight: "600" }}>Technology</h3>
+                <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px", textAlign: "center" }}>12 courses</p>
               </div>
               
-              <div className="job-card" style={{ 
-                padding: "20px", 
-                display: "flex", 
-                flexDirection: "column", 
-                alignItems: "center", 
-                justifyContent: "center",
-                cursor: "pointer"
-              }}>
-                <div style={{ fontSize: "28px", marginBottom: "10px" }}>📊</div>
-                <h3 style={{ textAlign: "center", fontSize: "15px" }}>Data Science</h3>
+              <div 
+                className="job-card" 
+                style={{ 
+                  padding: "25px", 
+                  display: "flex", 
+                  flexDirection: "column", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  border: "1px solid #e6f2ff",
+                  borderRadius: "10px",
+                  background: selectedCategory === "Data Science" ? "linear-gradient(to bottom, #e6f2ff, #ffffff)" : "linear-gradient(to bottom, #f8faff, #ffffff)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  boxShadow: selectedCategory === "Data Science" ? "0 10px 20px rgba(0,0,0,0.08)" : "none"
+                }}
+                onClick={() => handleCategorySelect("Data Science")}
+              >
+                <div style={{ 
+                  fontSize: "40px", 
+                  marginBottom: "15px",
+                  background: "#f0f7ff",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>📊</div>
+                <h3 style={{ textAlign: "center", fontSize: "16px", fontWeight: "600" }}>Data Science</h3>
+                <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px", textAlign: "center" }}>8 courses</p>
               </div>
               
-              <div className="job-card" style={{ 
-                padding: "20px", 
-                display: "flex", 
-                flexDirection: "column", 
-                alignItems: "center", 
-                justifyContent: "center",
-                cursor: "pointer"
-              }}>
-                <div style={{ fontSize: "28px", marginBottom: "10px" }}>🎨</div>
-                <h3 style={{ textAlign: "center", fontSize: "15px" }}>Design</h3>
+              <div 
+                className="job-card" 
+                style={{ 
+                  padding: "25px", 
+                  display: "flex", 
+                  flexDirection: "column", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  border: "1px solid #e6f2ff",
+                  borderRadius: "10px",
+                  background: selectedCategory === "Design" ? "linear-gradient(to bottom, #e6f2ff, #ffffff)" : "linear-gradient(to bottom, #f8faff, #ffffff)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  boxShadow: selectedCategory === "Design" ? "0 10px 20px rgba(0,0,0,0.08)" : "none"
+                }}
+                onClick={() => handleCategorySelect("Design")}
+              >
+                <div style={{ 
+                  fontSize: "40px", 
+                  marginBottom: "15px",
+                  background: "#f0f7ff",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>🎨</div>
+                <h3 style={{ textAlign: "center", fontSize: "16px", fontWeight: "600" }}>Design</h3>
+                <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px", textAlign: "center" }}>10 courses</p>
               </div>
               
-              <div className="job-card" style={{ 
-                padding: "20px", 
-                display: "flex", 
-                flexDirection: "column", 
-                alignItems: "center", 
-                justifyContent: "center",
-                cursor: "pointer"
-              }}>
-                <div style={{ fontSize: "28px", marginBottom: "10px" }}>📱</div>
-                <h3 style={{ textAlign: "center", fontSize: "15px" }}>Marketing</h3>
+              <div 
+                className="job-card" 
+                style={{ 
+                  padding: "25px", 
+                  display: "flex", 
+                  flexDirection: "column", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  border: "1px solid #e6f2ff",
+                  borderRadius: "10px",
+                  background: selectedCategory === "Marketing" ? "linear-gradient(to bottom, #e6f2ff, #ffffff)" : "linear-gradient(to bottom, #f8faff, #ffffff)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  boxShadow: selectedCategory === "Marketing" ? "0 10px 20px rgba(0,0,0,0.08)" : "none"
+                }}
+                onClick={() => handleCategorySelect("Marketing")}
+              >
+                <div style={{ 
+                  fontSize: "40px", 
+                  marginBottom: "15px",
+                  background: "#f0f7ff",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>📱</div>
+                <h3 style={{ textAlign: "center", fontSize: "16px", fontWeight: "600" }}>Marketing</h3>
+                <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px", textAlign: "center" }}>7 courses</p>
               </div>
               
-              <div className="job-card" style={{ 
-                padding: "20px", 
-                display: "flex", 
-                flexDirection: "column", 
-                alignItems: "center", 
-                justifyContent: "center",
-                cursor: "pointer"
-              }}>
-                <div style={{ fontSize: "28px", marginBottom: "10px" }}>📈</div>
-                <h3 style={{ textAlign: "center", fontSize: "15px" }}>Finance</h3>
+              <div 
+                className="job-card" 
+                style={{ 
+                  padding: "25px", 
+                  display: "flex", 
+                  flexDirection: "column", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  border: "1px solid #e6f2ff",
+                  borderRadius: "10px",
+                  background: selectedCategory === "Finance" ? "linear-gradient(to bottom, #e6f2ff, #ffffff)" : "linear-gradient(to bottom, #f8faff, #ffffff)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  boxShadow: selectedCategory === "Finance" ? "0 10px 20px rgba(0,0,0,0.08)" : "none"
+                }}
+                onClick={() => handleCategorySelect("Finance")}
+              >
+                <div style={{ 
+                  fontSize: "40px", 
+                  marginBottom: "15px",
+                  background: "#f0f7ff",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>📈</div>
+                <h3 style={{ textAlign: "center", fontSize: "16px", fontWeight: "600" }}>Finance</h3>
+                <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px", textAlign: "center" }}>6 courses</p>
               </div>
               
-              <div className="job-card" style={{ 
-                padding: "20px", 
-                display: "flex", 
-                flexDirection: "column", 
-                alignItems: "center", 
-                justifyContent: "center",
-                cursor: "pointer"
-              }}>
-                <div style={{ fontSize: "28px", marginBottom: "10px" }}>👩‍💼</div>
-                <h3 style={{ textAlign: "center", fontSize: "15px" }}>Leadership</h3>
+              <div 
+                className="job-card" 
+                style={{ 
+                  padding: "25px", 
+                  display: "flex", 
+                  flexDirection: "column", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  border: "1px solid #e6f2ff",
+                  borderRadius: "10px",
+                  background: selectedCategory === "Leadership" ? "linear-gradient(to bottom, #e6f2ff, #ffffff)" : "linear-gradient(to bottom, #f8faff, #ffffff)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  boxShadow: selectedCategory === "Leadership" ? "0 10px 20px rgba(0,0,0,0.08)" : "none"
+                }}
+                onClick={() => handleCategorySelect("Leadership")}
+              >
+                <div style={{ 
+                  fontSize: "40px", 
+                  marginBottom: "15px",
+                  background: "#f0f7ff",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>👩‍💼</div>
+                <h3 style={{ textAlign: "center", fontSize: "16px", fontWeight: "600" }}>Leadership</h3>
+                <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px", textAlign: "center" }}>5 courses</p>
               </div>
               
-              <div className="job-card" style={{ 
-                padding: "20px", 
-                display: "flex", 
-                flexDirection: "column", 
-                alignItems: "center", 
-                justifyContent: "center",
-                cursor: "pointer"
-              }}>
-                <div style={{ fontSize: "28px", marginBottom: "10px" }}>🔍</div>
-                <h3 style={{ textAlign: "center", fontSize: "15px" }}>Research</h3>
+              <div 
+                className="job-card" 
+                style={{ 
+                  padding: "25px", 
+                  display: "flex", 
+                  flexDirection: "column", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  border: "1px solid #e6f2ff",
+                  borderRadius: "10px",
+                  background: selectedCategory === "Research" ? "linear-gradient(to bottom, #e6f2ff, #ffffff)" : "linear-gradient(to bottom, #f8faff, #ffffff)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  boxShadow: selectedCategory === "Research" ? "0 10px 20px rgba(0,0,0,0.08)" : "none"
+                }}
+                onClick={() => handleCategorySelect("Research")}
+              >
+                <div style={{ 
+                  fontSize: "40px", 
+                  marginBottom: "15px",
+                  background: "#f0f7ff",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>🔍</div>
+                <h3 style={{ textAlign: "center", fontSize: "16px", fontWeight: "600" }}>Research</h3>
+                <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px", textAlign: "center" }}>4 courses</p>
               </div>
               
-              <div className="job-card" style={{ 
-                padding: "20px", 
-                display: "flex", 
-                flexDirection: "column", 
-                alignItems: "center", 
-                justifyContent: "center",
-                cursor: "pointer"
-              }}>
-                <div style={{ fontSize: "28px", marginBottom: "10px" }}>👥</div>
-                <h3 style={{ textAlign: "center", fontSize: "15px" }}>HR</h3>
+              <div 
+                className="job-card" 
+                style={{ 
+                  padding: "25px", 
+                  display: "flex", 
+                  flexDirection: "column", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  border: "1px solid #e6f2ff",
+                  borderRadius: "10px",
+                  background: selectedCategory === "HR" ? "linear-gradient(to bottom, #e6f2ff, #ffffff)" : "linear-gradient(to bottom, #f8faff, #ffffff)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  boxShadow: selectedCategory === "HR" ? "0 10px 20px rgba(0,0,0,0.08)" : "none"
+                }}
+                onClick={() => handleCategorySelect("HR")}
+              >
+                <div style={{ 
+                  fontSize: "40px", 
+                  marginBottom: "15px",
+                  background: "#f0f7ff",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>👥</div>
+                <h3 style={{ textAlign: "center", fontSize: "16px", fontWeight: "600" }}>HR</h3>
+                <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px", textAlign: "center" }}>3 courses</p>
               </div>
             </div>
           </section>

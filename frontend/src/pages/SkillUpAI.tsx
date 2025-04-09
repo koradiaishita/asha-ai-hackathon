@@ -9,11 +9,31 @@ function SkillUpAI() {
   const [currentJobTitle, setCurrentJobTitle] = useState<string>("");
   const [targetJobTitle, setTargetJobTitle] = useState<string>("");
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const roadmapRef = useRef<HTMLDivElement>(null);
+  const featuredCoursesRef = useRef<HTMLElement>(null);
   
   // Add a navigation handler that will be implemented when router is installed
   const navigateToHome = () => {
     window.location.href = '/'; // Simple navigation without router
+  };
+  
+  // Handle browse courses button click
+  const handleBrowseCoursesClick = () => {
+    if (featuredCoursesRef.current) {
+      featuredCoursesRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  
+  // Handle enroll now button click
+  const handleEnrollNow = (courseName: string) => {
+    alert(`You've successfully enrolled in "${courseName}". Your journey begins now!`);
+  };
+  
+  // Handle category selection
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+    alert(`You selected the ${category} category. We'll show you relevant courses in this category soon!`);
   };
   
   // Handle generating career roadmap
@@ -200,7 +220,22 @@ function SkillUpAI() {
         <main className="main-content">
           {/* SkillUp AI Hero Section */}
           <section className="featured-jobs">
-            <h2>Master In-Demand Skills</h2>
+            <div style={{ display: "flex", alignItems: "center", marginBottom: "15px" }}>
+              <button 
+                onClick={navigateToHome} 
+                style={{ 
+                  background: "none", 
+                  border: "none", 
+                  cursor: "pointer", 
+                  fontSize: "24px", 
+                  marginRight: "10px",
+                  color: "var(--primary)"
+                }}
+              >
+                ←
+              </button>
+              <h2>Master In-Demand Skills</h2>
+            </div>
             <div className="job-card" style={{ padding: "25px" }}>
               <div className="job-info">
                 <h3 className="job-title">Access premium courses and start your learning journey today</h3>
@@ -212,8 +247,10 @@ function SkillUpAI() {
                       alignItems: "center", 
                       background: "var(--primary)", 
                       borderRadius: "8px",
-                      padding: "10px 20px"
+                      padding: "10px 20px",
+                      cursor: "pointer"
                     }}
+                    onClick={handleBrowseCoursesClick}
                   >
                     <span>Browse Courses</span>
                     <span style={{ marginLeft: "10px", fontSize: "18px" }}>→</span>
@@ -226,20 +263,37 @@ function SkillUpAI() {
           {/* Career Roadmap Section */}
           <section className="featured-jobs">
             <h2>Create Your Career Roadmap</h2>
-            <div className="job-card" style={{ padding: "20px" }}>
-              <p style={{ marginBottom: "15px", color: "var(--text-gray)" }}>
+            
+            {/* White container with introduction text and pink content box */}
+            <div className="job-card" style={{ 
+              padding: "30px", 
+              background: "white", 
+              borderRadius: "12px",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.05)",
+              border: "1px solid var(--border-light)",
+              marginBottom: "20px" 
+            }}>
+              {/* Introduction text */}
+              <p style={{ 
+                marginBottom: "25px", 
+                color: "var(--text-gray)",
+                fontSize: "15px",
+                lineHeight: "1.6"
+              }}>
                 Get a personalized career development path with skills to acquire and milestones to achieve. 
                 Our AI analyzes your current skills, experience, and career goals to create 
                 a personalized roadmap for your professional development.
               </p>
               
+              {/* Pink container with roadmap details */}
               <div style={{ 
+                padding: "25px", 
                 background: "var(--primary-light)", 
-                padding: "20px", 
                 borderRadius: "8px",
-                marginBottom: "20px" 
+                border: "1px solid rgba(255, 105, 180, 0.1)",
+                marginBottom: "25px" 
               }}>
-                <h4 style={{ marginBottom: "15px" }}>Your Career Roadmap Includes:</h4>
+                <h4 style={{ marginBottom: "20px", color: "#333" }}>Your Career Roadmap Includes:</h4>
                 <ul style={{ marginLeft: "20px", marginBottom: "15px", fontSize: "14px", color: "var(--text-gray)" }}>
                   <li style={{ marginBottom: "10px" }}>Skill gap analysis for your target roles</li>
                   <li style={{ marginBottom: "10px" }}>Recommended learning resources and certifications</li>
@@ -247,19 +301,18 @@ function SkillUpAI() {
                   <li style={{ marginBottom: "10px" }}>Industry trends and emerging skills in your field</li>
                   <li style={{ marginBottom: "10px" }}>Alternative career paths based on your transferable skills</li>
                 </ul>
-              </div>
               
-              <div style={{ marginTop: "20px", padding: "15px", background: "var(--primary-light)", borderRadius: "8px" }}>
-                <h4 style={{ marginBottom: "10px" }}>Enter Your Current and Target Job Titles:</h4>
+                <h4 style={{ marginBottom: "15px", marginTop: "25px", color: "#333" }}>Enter Your Current and Target Job Titles:</h4>
                 <input 
                   type="text"
                   placeholder="Current Job Title"
                   style={{ 
                     width: "100%", 
-                    padding: "10px", 
+                    padding: "12px", 
                     borderRadius: "5px",
                     border: "1px solid var(--border-light)",
-                    marginBottom: "15px"
+                    marginBottom: "15px",
+                    background: "white"
                   }}
                   value={currentJobTitle}
                   onChange={(e) => setCurrentJobTitle(e.target.value)}
@@ -269,10 +322,11 @@ function SkillUpAI() {
                   placeholder="Target Job Title"
                   style={{ 
                     width: "100%", 
-                    padding: "10px", 
+                    padding: "12px", 
                     borderRadius: "5px",
                     border: "1px solid var(--border-light)",
-                    marginBottom: "15px"
+                    marginBottom: "20px",
+                    background: "white"
                   }}
                   value={targetJobTitle}
                   onChange={(e) => setTargetJobTitle(e.target.value)}
@@ -281,10 +335,16 @@ function SkillUpAI() {
                   className="update-btn" 
                   onClick={handleGenerateCareerRoadmap}
                   disabled={isGeneratingRoadmap}
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    fontWeight: "600"
+                  }}
                 >
                   {isGeneratingRoadmap ? "Generating..." : "Generate Career Roadmap"}
                 </button>
               </div>
+            </div>
 
               {careerRoadmap && (
                 <div style={{ marginTop: "20px" }}>
@@ -337,8 +397,7 @@ function SkillUpAI() {
                   </div>
                 </div>
               )}
-            </div>
-          </section>
+            </section>
 
           {/* Stats Section */}
           <section className="featured-jobs">
@@ -375,7 +434,7 @@ function SkillUpAI() {
           </section>
 
           {/* Featured Courses */}
-          <section className="featured-jobs">
+          <section className="featured-jobs" ref={featuredCoursesRef}>
             <div className="section-header" style={{ display: "flex", justifyContent: "space-between", marginBottom: "15px" }}>
               <h2>Featured Courses</h2>
               <span style={{ color: "var(--primary)", cursor: "pointer" }}>View all →</span>
@@ -407,7 +466,13 @@ function SkillUpAI() {
                   <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Learn the basics of data analysis and visualization</p>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontWeight: "bold" }}>₹2,499</span>
-                    <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}>Enroll Now</button>
+                    <button 
+                      className="update-btn" 
+                      style={{ padding: "5px 10px", fontSize: "14px" }}
+                      onClick={() => handleEnrollNow("Data Science Fundamentals")}
+                    >
+                      Enroll Now
+                    </button>
                   </div>
                 </div>
               </div>
@@ -434,7 +499,13 @@ function SkillUpAI() {
                   <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Master modern web development technologies</p>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontWeight: "bold" }}>₹3,999</span>
-                    <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}>Enroll Now</button>
+                    <button 
+                      className="update-btn" 
+                      style={{ padding: "5px 10px", fontSize: "14px" }}
+                      onClick={() => handleEnrollNow("Full-Stack Web Development")}
+                    >
+                      Enroll Now
+                    </button>
                   </div>
                 </div>
               </div>
@@ -461,7 +532,13 @@ function SkillUpAI() {
                   <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Create beautiful, user-friendly interfaces</p>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontWeight: "bold" }}>₹2,999</span>
-                    <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}>Enroll Now</button>
+                    <button 
+                      className="update-btn" 
+                      style={{ padding: "5px 10px", fontSize: "14px" }}
+                      onClick={() => handleEnrollNow("UX/UI Design Essentials")}
+                    >
+                      Enroll Now
+                    </button>
                   </div>
                 </div>
               </div>

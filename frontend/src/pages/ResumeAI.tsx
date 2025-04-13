@@ -3,6 +3,7 @@ import { ChatWidget } from '../components/ChatWidget';
 import { ResumeFeatureContent } from '../components/resume-features/ResumeFeatureContent';
 import { ProjectRecommendations } from '../components/ProjectRecommendations';
 import '../App.css';
+import './BackToHome.css';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 
@@ -169,9 +170,9 @@ function ResumeAI() {
   // Refs for the canvas PDF generation
   const resumeRef = useRef<HTMLDivElement>(null);
   
-  // Add a navigation handler that will be implemented when router is installed
+  // Use React Router for navigation
   const navigateToHome = () => {
-    window.location.href = '/'; // Simple navigation without router
+    window.location.href = '/'; // Will use React Router in the future
   };
   
   // Handle applying AI optimizations
@@ -408,7 +409,7 @@ function ResumeAI() {
     setTimeout(() => {
       // In a real app, we would send the job description and resume to an API
       const sampleCoverLetter = `
-April 5, 2025
+[your_date]
 
 Hiring Manager
 [Company Name]
@@ -426,7 +427,7 @@ I am excited about the possibility of bringing my skills in product strategy, da
 Thank you for considering my application. I look forward to the possibility of working together.
 
 Sincerely,
-Ishita Koradia
+[your_name]
       `;
       
       setCoverLetterContent(sampleCoverLetter);
@@ -2418,8 +2419,32 @@ Ishita Koradia
       default:
         return (
           <>
+        
             <section className="featured-jobs">
-              <h2>Resume AI Assistant</h2>
+              <h2>
+                <span 
+                  onClick={() => window.location.href = '/'} 
+                  style={{ 
+                    cursor: 'pointer', 
+                    marginRight: '5px',
+                    display: 'inline-block',
+                    width: '25px',
+                    height: '25px',
+                    lineHeight: '25px',
+                    textAlign: 'center',
+                    borderRadius: '50%',
+                    transition: 'all 0.3s ease',
+                    background: 'transparent'
+                  }}
+                  className="back-arrow"
+                  title="Back to Home"
+                  onMouseOver={(e) => e.currentTarget.style.background = 'var(--primary-light)'}
+                  onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  ←
+                </span>
+                <span>Resume AI Assistant</span>
+              </h2>
               <div className="job-card" style={{ padding: "25px" }}>
                 <div className="job-info">
                   <h3 className="job-title">Enhance Your Resume with AI</h3>
@@ -2632,7 +2657,7 @@ Ishita Koradia
       <header className="header">
         <div className="logo">
           <span className="herkey-logo">JobsForHer</span>
-          <span class="turns-ten">empowering women</span>
+          <span className="turns-ten">empowering women</span>
         </div>
         <div className="search-container">
           <input 
@@ -2641,6 +2666,7 @@ Ishita Koradia
             className="search-input" 
           />
         </div>
+        
         <button className="sign-up-btn">Sign Up</button>
       </header>
 

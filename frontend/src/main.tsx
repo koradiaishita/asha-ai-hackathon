@@ -1,31 +1,29 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 import ResumeAI from './pages/ResumeAI.tsx'
+import ProjectIdeasAI from './pages/ProjectIdeasAI.tsx'
+import InterviewReadyAI from './pages/InterviewReadyAI.tsx'
+import SkillUpAI from './pages/SkillUpAI.tsx'
+import UpskillNavigator from './pages/UpskillNavigator.tsx'
+import MentorMatchAI from './pages/MentorMatchAI.tsx'
 
-// Simple client-side routing based on the URL path
-const renderApp = () => {
-  const path = window.location.pathname;
-  const root = createRoot(document.getElementById('root')!);
-  
-  if (path === '/resume-ai') {
-    root.render(
-      <StrictMode>
-        <ResumeAI />
-      </StrictMode>
-    );
-  } else {
-    root.render(
-      <StrictMode>
-        <App />
-      </StrictMode>
-    );
-  }
-};
+const root = createRoot(document.getElementById('root')!);
 
-// Initial render
-renderApp();
-
-// Handle browser back/forward navigation
-window.addEventListener('popstate', renderApp);
+root.render(
+  <StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/resume-ai" element={<ResumeAI />} />
+        <Route path="/project-ideas-ai" element={<ProjectIdeasAI />} />
+        <Route path="/interview-ready-ai" element={<InterviewReadyAI />} />
+        <Route path="/skillup-ai" element={<SkillUpAI />} />
+        <Route path="/upskill-navigator" element={<UpskillNavigator />} />
+        <Route path="/mentor-match-ai" element={<MentorMatchAI />} />
+      </Routes>
+    </BrowserRouter>
+  </StrictMode>
+);

@@ -9,6 +9,10 @@ import {
 } from '@mui/icons-material';
 import { VoiceModal } from './VoiceModal';
 
+// Define the API URL as a constant for consistency
+// Use the URL that works in GitHub Codespaces
+const API_URL = 'https://expert-couscous-5gr56j9rv59jc455x-8000.app.github.dev';
+
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -16,9 +20,20 @@ export function ChatWidget() {
     { text: 'Hi! How can I help you today?', isUser: false, type: 'text' }
   ]);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatWindowRef = useRef<HTMLDivElement>(null);
+
+  // Load session ID from localStorage on component mount
+  useEffect(() => {
+    const savedSessionId = localStorage.getItem('chatSessionId');
+    if (savedSessionId) {
+      setSessionId(savedSessionId);
+      // Optionally load previous messages for this session
+      fetchConversationHistory(savedSessionId);
+    }
+  }, []);
 
   // Handle clicks outside the chat window to close it
   useEffect(() => {
@@ -42,22 +57,68 @@ export function ChatWidget() {
     scrollToBottom();
   }, [messages]);
 
+  // Fetch conversation history for an existing session
+  const fetchConversationHistory = async (sid: string) => {
+    try {
+      const response = await fetch(`${API_URL}/conversations/${sid}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.messages && data.messages.length > 0) {
+          setMessages(data.messages);
+        }
+      } else {
+        console.error('Failed to fetch conversation history');
+      }
+    } catch (error) {
+      console.error('Error fetching conversation history:', error);
+    }
+  };
+
   const toggleChat = () => {
     setIsOpen(prev => !prev);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (message.trim()) {
-      setMessages([...messages, { text: message, isUser: true, type: 'text' }]);
+      // Add user message to chat
+      setMessages(prev => [...prev, { text: message, isUser: true, type: 'text' }]);
       
-      // Simulate bot response
-      setTimeout(() => {
+      try {
+        // Send message to backend API with session ID if available
+        const response = await fetch(`${API_URL}/echo-message`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            message: message,
+            session_id: sessionId 
+          }),
+        });
+        
+        const data = await response.json();
+        
+        // Store the session ID if it's returned
+        if (data.session_id && (!sessionId || sessionId !== data.session_id)) {
+          setSessionId(data.session_id);
+          localStorage.setItem('chatSessionId', data.session_id);
+        }
+        
+        // Add response from backend to chat
         setMessages(prev => [...prev, { 
-          text: "I'm your Asha AI assistant. How can I help you?", 
+          text: data.message, 
           isUser: false, 
           type: 'text' 
         }]);
-      }, 1000);
+      } catch (error) {
+        console.error('Error sending message to backend:', error);
+        // Show error message in chat
+        setMessages(prev => [...prev, { 
+          text: "Sorry, there was an error communicating with the server.", 
+          isUser: false, 
+          type: 'text' 
+        }]);
+      }
       
       setMessage('');
     }
@@ -85,21 +146,49 @@ export function ChatWidget() {
     }
   };
 
-  const handleVoiceInput = (text: string) => {
-    setMessages([...messages, { 
+  const handleVoiceInput = async (text: string) => {
+    setMessages(prev => [...prev, { 
       text: text, 
       isUser: true, 
       type: 'audio' 
     }]);
     
-    // Simulate bot response
-    setTimeout(() => {
+    try {
+      // Send voice transcription to backend API with session ID
+      const response = await fetch(`${API_URL}/echo-message`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: text,
+          session_id: sessionId
+        }),
+      });
+      
+      const data = await response.json();
+      
+      // Store the session ID if it's returned
+      if (data.session_id && (!sessionId || sessionId !== data.session_id)) {
+        setSessionId(data.session_id);
+        localStorage.setItem('chatSessionId', data.session_id);
+      }
+      
+      // Add response from backend to chat
       setMessages(prev => [...prev, { 
-        text: "I received your voice message. How else can I assist you?", 
+        text: data.message, 
         isUser: false, 
         type: 'text' 
       }]);
-    }, 1000);
+    } catch (error) {
+      console.error('Error sending voice message to backend:', error);
+      // Show error message in chat
+      setMessages(prev => [...prev, { 
+        text: "Sorry, there was an error communicating with the server.", 
+        isUser: false, 
+        type: 'text' 
+      }]);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -107,6 +196,13 @@ export function ChatWidget() {
       e.preventDefault();
       handleSend();
     }
+  };
+
+  // Function to start a new conversation
+  const startNewConversation = () => {
+    setSessionId(null);
+    localStorage.removeItem('chatSessionId');
+    setMessages([{ text: 'Hi! How can I help you today?', isUser: false, type: 'text' }]);
   };
 
   return (
@@ -131,18 +227,33 @@ export function ChatWidget() {
                 <div className="bot-avatar"></div>
                 <span>Asha AI Assistant</span>
               </div>
-              <button 
-                className="chat-icon-button" 
-                onClick={() => setIsOpen(false)}
-                style={{ 
-                  background: 'transparent', 
-                  width: '30px', 
-                  height: '30px',
-                  color: 'white'
-                }}
-              >
-                <CloseIcon />
-              </button>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button 
+                  className="chat-icon-button" 
+                  onClick={startNewConversation}
+                  title="Start a new conversation"
+                  style={{ 
+                    background: 'transparent', 
+                    width: '30px', 
+                    height: '30px',
+                    color: 'white'
+                  }}
+                >
+                  <span style={{ fontSize: '16px' }}>+</span>
+                </button>
+                <button 
+                  className="chat-icon-button" 
+                  onClick={() => setIsOpen(false)}
+                  style={{ 
+                    background: 'transparent', 
+                    width: '30px', 
+                    height: '30px',
+                    color: 'white'
+                  }}
+                >
+                  <CloseIcon />
+                </button>
+              </div>
             </div>
 
             <div className="chat-messages">

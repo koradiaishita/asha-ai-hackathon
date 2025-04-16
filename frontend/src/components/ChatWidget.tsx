@@ -11,6 +11,9 @@ import { VoiceModal } from './VoiceModal';
 // API endpoint for chat
 const API_URL = 'https://refactored-chainsaw-4jv645rvqr56cj965-8000.app.github.dev/api/chat';
 
+// Add console log to debug
+console.log("Using API URL:", API_URL);
+
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -65,6 +68,8 @@ export function ChatWidget() {
   const sendMessageToBackend = async (userMessage: string) => {
     try {
       setIsLoading(true);
+      console.log(`Sending request to: ${API_URL} with message: ${userMessage}`);
+      
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
@@ -76,15 +81,26 @@ export function ChatWidget() {
         }),
       });
 
+      console.log(`Response status: ${response.status}`);
+      
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorText = await response.text();
+        console.error(`Server responded with status: ${response.status}, message: ${errorText}`);
+        throw new Error(`Network response was not ok: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log("Received response:", data);
       return data.response;
     } catch (error) {
       console.error('Error sending message to backend:', error);
-      return "Sorry, I'm having trouble connecting to the server right now.";
+      
+      // More descriptive error message based on error type
+      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+        return "Cannot connect to the server. Please check if the backend is running.";
+      } else {
+        return "Sorry, I'm having trouble connecting to the server right now.";
+      }
     } finally {
       setIsLoading(false);
     }

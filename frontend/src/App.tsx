@@ -652,11 +652,6 @@ function HomePage() {
                       overflow: "hidden",
                       boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
                     }}>
-                      <img 
-                        src="https://img1.wsimg.com/isteam/ip/731af567-e0a8-4bb9-9452-fe30d23374f9/blob-536ae96.png" 
-                        alt="Asha AI Assistant" 
-                        style={{ width: "100%", height: "auto", display: "block" }}
-                      />
                     </div>
                     <h3 className="job-title">Asha AI Chatbot</h3>
                     <p style={{ marginBottom: "15px", color: "var(--text-gray)", textAlign: "center" }}>

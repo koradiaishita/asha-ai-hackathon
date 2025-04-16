@@ -88,7 +88,7 @@ export function VoiceModal({ isOpen, onClose, onSubmit }: VoiceModalProps) {
   const handleSubmit = () => {
     if (transcript) {
       onSubmit(transcript);
-      onClose();
+      onClose(); // We only close the voice modal, not the chat widget
       resetRecording();
     }
   };

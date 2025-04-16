@@ -9,6 +9,7 @@ import InterviewReadyAI from './pages/InterviewReadyAI.tsx'
 import SkillUpAI from './pages/SkillUpAI.tsx'
 import UpskillNavigator from './pages/UpskillNavigator.tsx'
 import MentorMatchAI from './pages/MentorMatchAI.tsx'
+import Careers from './pages/Careers.tsx'
 
 const root = createRoot(document.getElementById('root')!);
 
@@ -23,6 +24,7 @@ root.render(
         <Route path="/skillup-ai" element={<SkillUpAI />} />
         <Route path="/upskill-navigator" element={<UpskillNavigator />} />
         <Route path="/mentor-match-ai" element={<MentorMatchAI />} />
+        <Route path="/careers" element={<Careers />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

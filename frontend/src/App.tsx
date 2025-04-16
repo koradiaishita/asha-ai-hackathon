@@ -154,7 +154,20 @@ function HomePage() {
   const [showingEmployers, setShowingEmployers] = React.useState(false);
   const [showingProfile, setShowingProfile] = React.useState(false);
   const [showingReturnship, setShowingReturnship] = React.useState(false);
+  
+  // Add user state to store registered users
+  const [registeredUsers, setRegisteredUsers] = React.useState<{fullName: string, email: string, password: string}[]>([]);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [currentUser, setCurrentUser] = React.useState<string>('');
+  const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const [loginFormData, setLoginFormData] = React.useState({
+    email: '',
+    password: ''
+  });
 
+  // Add a welcome banner state
+  const [showWelcomeBanner, setShowWelcomeBanner] = React.useState(false);
+  
   // Function to handle search input submission
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,6 +223,13 @@ function HomePage() {
     // Here you would typically send this data to your backend API
     // For now, we'll just show a success message
     alert(`Thank you for signing up, ${signUpFormData.fullName}! A confirmation link has been sent to ${signUpFormData.email}.`);
+    
+    // Add user to registered users state
+    setRegisteredUsers(prev => [...prev, {
+      fullName: signUpFormData.fullName,
+      email: signUpFormData.email,
+      password: signUpFormData.password
+    }]);
     
     // Close the modal and reset form
     setShowSignUpModal(false);
@@ -330,13 +350,57 @@ function HomePage() {
     setShowingReturnship(false);
   };
 
+  // Function to handle login input changes
+  const handleLoginInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLoginFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Function to handle login form submission
+  const handleLoginSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Find user with matching email
+    const user = registeredUsers.find(user => user.email === loginFormData.email);
+    
+    if (user && user.password === loginFormData.password) {
+      // Set logged in state
+      setIsLoggedIn(true);
+      setCurrentUser(user.fullName);
+      setShowLoginModal(false);
+      // Show welcome banner
+      setShowWelcomeBanner(true);
+      // Reset form data
+      setLoginFormData({
+        email: '',
+        password: ''
+      });
+      
+      // Hide welcome banner after 5 seconds
+      setTimeout(() => {
+        setShowWelcomeBanner(false);
+      }, 5000);
+    } else {
+      alert("Invalid email or password. Please try again.");
+    }
+  };
+
+  // Function to handle Log In button click from signup modal
+  const handleShowLogin = () => {
+    setShowSignUpModal(false);
+    setShowLoginModal(true);
+  };
+
   return (
     <div className="app">
       {/* Header */}
       <header className="header">
         <div className="logo">
-          <span className="herkey-logo">JobsForHer</span>
-          <span className="turns-ten">empowering women</span>
+          <span className="herkey-logo">HerKey Saarthi</span>
+          <span className="turns-ten">Your AI-Assistant</span>
         </div>
         <form className="search-container" onSubmit={handleSearch}>
           <input 
@@ -346,77 +410,228 @@ function HomePage() {
           />
           <SearchIcon className="search-icon" fontSize="small" />
         </form>
-        <button className="sign-up-btn" onClick={handleSignUp}>Sign Up</button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button 
+            className="sign-up-btn" 
+            style={{ 
+              backgroundColor: 'transparent', 
+              color: 'var(--primary)',
+              border: '1px solid var(--primary)'
+            }}
+            onClick={() => setShowLoginModal(true)}
+          >
+            Login
+          </button>
+          <button className="sign-up-btn" onClick={handleSignUp}>Sign Up</button>
+        </div>
       </header>
+
+      {/* Welcome Banner */}
+      {showWelcomeBanner && (
+        <div style={{
+          position: 'fixed',
+          top: '80px', 
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: 'var(--primary)',
+          color: 'white',
+          padding: '15px 30px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+          zIndex: 1000,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          animation: 'fadeIn 0.5s ease-out'
+        }}>
+          <div style={{
+            width: '30px',
+            height: '30px',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '18px'
+          }}>
+            {currentUser.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <p style={{ fontWeight: '500', marginBottom: '3px' }}>Welcome back, {currentUser}!</p>
+            <p style={{ fontSize: '14px', opacity: '0.9' }}>It's great to see you again</p>
+          </div>
+        </div>
+      )}
 
       <div className="content-container">
         {/* Left Sidebar */}
         <aside className="left-sidebar">
           <nav className="nav-menu">
-            <ul>
+            <ul style={{ 
+              listStyle: 'none', 
+              padding: 0, 
+              margin: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px'
+            }}>
               <li className="nav-item">
-                <Link to="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
-                  <HomeIcon className="nav-icon" />
-                  <span className="nav-text">Home</span>
+                <Link to="/" style={{ 
+                  textDecoration: 'none', 
+                  color: 'inherit', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  width: '100%',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  transition: 'background-color 0.2s',
+                  '&:hover': {
+                    backgroundColor: 'rgba(149, 69, 225, 0.05)'
+                  }
+                }}>
+                  <HomeIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
+                  <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>Home</span>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/resume-ai" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
-                  <DescriptionIcon className="nav-icon" />
-                  <span className="nav-text">Resume AI</span>
+                <Link to="/resume-ai" style={{ 
+                  textDecoration: 'none', 
+                  color: 'inherit', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  width: '100%',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  transition: 'background-color 0.2s'
+                }}>
+                  <DescriptionIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
+                  <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>Resume AI</span>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/skillup-ai" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
-                  <BusinessCenterIcon className="nav-icon" />
-                  <span className="nav-text">SkillUp AI</span>
+                <Link to="/skillup-ai" style={{ 
+                  textDecoration: 'none', 
+                  color: 'inherit', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  width: '100%',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  transition: 'background-color 0.2s'
+                }}>
+                  <BusinessCenterIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
+                  <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>SkillUp AI</span>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/project-ideas-ai" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
-                  <FolderSpecialIcon className="nav-icon" />
-                  <span className="nav-text">ProjectIdeas AI</span>
+                <Link to="/project-ideas-ai" style={{ 
+                  textDecoration: 'none', 
+                  color: 'inherit', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  width: '100%',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  transition: 'background-color 0.2s'
+                }}>
+                  <FolderSpecialIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
+                  <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>ProjectIdeas AI</span>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/interview-ready-ai" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
-                  <GroupIcon className="nav-icon" />
-                  <span className="nav-text">InterviewReadyAI</span>
+                <Link to="/interview-ready-ai" style={{ 
+                  textDecoration: 'none', 
+                  color: 'inherit', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  width: '100%',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  transition: 'background-color 0.2s'
+                }}>
+                  <GroupIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
+                  <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>InterviewReadyAI</span>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/mentor-match-ai" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', width: '100%' }}>
-                  <SchoolIcon className="nav-icon" />
-                  <span className="nav-text">MentorMatch AI</span>
+                <Link to="/mentor-match-ai" style={{ 
+                  textDecoration: 'none', 
+                  color: 'inherit', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  width: '100%',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  transition: 'background-color 0.2s'
+                }}>
+                  <SchoolIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
+                  <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>MentorMatch AI</span>
                 </Link>
               </li>
               <li className="nav-item">
-                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleEventsClick}>
-                  <EventIcon className="nav-icon" />
-                  <span className="nav-text">Events</span>
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  cursor: 'pointer',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  transition: 'background-color 0.2s'
+                }} onClick={handleEventsClick}>
+                  <EventIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
+                  <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>Events</span>
                 </div>
               </li>
               <li className="nav-item">
-                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleContactClick}>
-                  <ContactSupportIcon className="nav-icon" />
-                  <span className="nav-text">Contact us</span>
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  cursor: 'pointer',
+                  padding: '10px 15px',
+                  borderRadius: '8px',
+                  transition: 'background-color 0.2s'
+                }} onClick={handleContactClick}>
+                  <ContactSupportIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
+                  <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>Contact us</span>
                 </div>
               </li>
             </ul>
-            <div className="herkey-business">
-              <button className="business-btn" onClick={handleBusinessClick}>
-                <MenuIcon className="business-icon" />
+            <div className="herkey-business" style={{ marginTop: '20px', padding: '0 10px' }}>
+              <button className="business-btn" style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                padding: '12px 15px',
+                backgroundColor: 'rgba(149, 69, 225, 0.08)',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '15px',
+                fontWeight: '500',
+                color: 'var(--primary)',
+                transition: 'background-color 0.2s'
+              }} onClick={handleBusinessClick}>
+                <MenuIcon className="business-icon" style={{ marginRight: '12px', fontSize: '20px' }} />
                 JobsForHer for Employers
               </button>
             </div>
-            <div className="app-download">
-              <img src="/google-play-badge.png" alt="Get it on Google Play" className="google-play" />
+            <div className="app-download" style={{ margin: '20px 0', padding: '0 10px', textAlign: 'center' }}>
+              <img src="/google-play-badge.png" alt="Get it on Google Play" className="google-play" style={{ 
+                maxWidth: '180px', 
+                display: 'block',
+                margin: '0 auto',
+                borderRadius: '6px'
+              }} />
             </div>
-            <div className="social-icons">
-              <FacebookIcon className="social-icon" />
-              <TwitterIcon className="social-icon" />
-              <LinkedInIcon className="social-icon" />
-              <InstagramIcon className="social-icon" />
+            <div className="social-icons" style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              gap: '15px',
+              margin: '15px 0' 
+            }}>
+              <FacebookIcon className="social-icon" style={{ color: 'var(--primary)', cursor: 'pointer' }} />
+              <TwitterIcon className="social-icon" style={{ color: 'var(--primary)', cursor: 'pointer' }} />
+              <LinkedInIcon className="social-icon" style={{ color: 'var(--primary)', cursor: 'pointer' }} />
+              <InstagramIcon className="social-icon" style={{ color: 'var(--primary)', cursor: 'pointer' }} />
             </div>
           </nav>
         </aside>
@@ -429,19 +644,32 @@ function HomePage() {
               <section className="featured-jobs">
                 <h2>Meet Asha - Your Career Assistant</h2>
                 <div className="job-card" style={{ padding: "25px" }}>
-                  <div className="job-info">
+                  <div className="job-info" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <div style={{ 
+                      maxWidth: "250px", 
+                      marginBottom: "20px", 
+                      borderRadius: "8px", 
+                      overflow: "hidden",
+                      boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
+                    }}>
+                      <img 
+                        src="https://img1.wsimg.com/isteam/ip/731af567-e0a8-4bb9-9452-fe30d23374f9/blob-536ae96.png" 
+                        alt="Asha AI Assistant" 
+                        style={{ width: "100%", height: "auto", display: "block" }}
+                      />
+                    </div>
                     <h3 className="job-title">Asha AI Chatbot</h3>
-                    <p style={{ marginBottom: "15px", color: "var(--text-gray)" }}>
+                    <p style={{ marginBottom: "15px", color: "var(--text-gray)", textAlign: "center" }}>
                       Asha is an AI-powered virtual assistant designed to guide women in their career journey. 
                       Ask about jobs, events, mentorship programs, and more!
                     </p>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "15px" }}>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "15px", justifyContent: "center" }}>
                       <span className="newly-added" style={{ background: "var(--light-purple)" }}>Contextual Awareness</span>
                       <span className="newly-added" style={{ background: "var(--primary-light)" }}>Real-time Information</span>
                       <span className="newly-added" style={{ background: "#e8f5e9" }}>Bias Prevention</span>
                       <span className="newly-added" style={{ background: "#fff3e0" }}>Privacy Focused</span>
                     </div>
-                    <p style={{ fontSize: "14px", color: "var(--purple-text)", fontWeight: "500" }}>
+                    <p style={{ fontSize: "14px", color: "var(--purple-text)", fontWeight: "500", textAlign: "center" }}>
                       Click the chat icon in the bottom right corner to start a conversation with Asha!
                     </p>
                   </div>
@@ -1029,7 +1257,11 @@ function HomePage() {
           <div className="profile-card">
             <h2 className="profile-title">Complete your career profile!</h2>
             <div className="profile-image">
-              {/* Profile completion illustration */}
+              <img 
+                src="https://www.shutterstock.com/image-vector/vector-illustration-green-business-team-260nw-572985127.jpg" 
+                alt="Complete your profile" 
+                style={{ maxWidth: '100%', height: 'auto' }}
+              />
             </div>
             <button className="update-btn" onClick={handleUpdateProfile}>Update now</button>
           </div>
@@ -1040,9 +1272,28 @@ function HomePage() {
               JobsForHer's Returnship Program helps women rebuild confidence and skills for a successful career comeback.
             </p>
             <p className="scholarship-text">Limited spots available!</p>
-            <div className="card-image">
-              {/* Career break program image */}
+            <div className="card-image" style={{ 
+              textAlign: 'center', 
+              margin: '15px auto',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              maxWidth: '280px',
+              borderRadius: '8px',
+              overflow: 'hidden',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            }}>
+              <img 
+                src="https://media.istockphoto.com/id/1418460779/vector/phrase-limited-spots-available-vector-illustration.jpg?s=1024x1024&w=is&k=20&c=79DLbT7CJf6io7EaFNTj89qWloo2a8Ycnp-cLY-GA_s=" 
+                alt="Limited spots available" 
+                style={{ 
+                  maxWidth: '100%',
+                  height: 'auto',
+                  display: 'block'
+                }}
+              />
             </div>
+            <button className="returnship-btn" onClick={handleReturnshipProgram}>Apply Now</button>
           </div>
         </aside>
       </div>
@@ -1250,12 +1501,163 @@ function HomePage() {
                     marginLeft: '5px',
                     fontWeight: '500'
                   }}
-                  onClick={() => {
-                    // Here you would toggle to login form
-                    alert("Login functionality will be implemented soon!");
-                  }}
+                  onClick={handleShowLogin}
                 >
                   Log In
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="modal-overlay" style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div className="modal-content" style={{
+            backgroundColor: 'white',
+            padding: '30px',
+            borderRadius: '8px',
+            width: '90%',
+            maxWidth: '450px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            position: 'relative'
+          }}>
+            <button 
+              onClick={() => setShowLoginModal(false)}
+              style={{
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                background: 'transparent',
+                border: 'none',
+                fontSize: '20px',
+                cursor: 'pointer'
+              }}
+            >
+              ×
+            </button>
+            
+            <h2 style={{
+              color: 'var(--primary)',
+              marginBottom: '20px',
+              textAlign: 'center'
+            }}>
+              Log In
+            </h2>
+            
+            <p style={{
+              color: 'var(--text-gray)',
+              marginBottom: '20px',
+              textAlign: 'center',
+              fontSize: '14px'
+            }}>
+              Welcome back! Please enter your credentials to log in.
+            </p>
+            
+            <form onSubmit={handleLoginSubmit}>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '5px', 
+                  fontWeight: '500',
+                  fontSize: '14px'
+                }}>
+                  Email
+                </label>
+                <input 
+                  type="email" 
+                  name="email"
+                  value={loginFormData.email}
+                  onChange={handleLoginInputChange}
+                  placeholder="Enter your email address" 
+                  required
+                  style={{ 
+                    width: '100%', 
+                    padding: '12px',
+                    border: '1px solid var(--border-light)',
+                    borderRadius: '4px',
+                    fontSize: '14px'
+                  }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '5px', 
+                  fontWeight: '500',
+                  fontSize: '14px'
+                }}>
+                  Password
+                </label>
+                <input 
+                  type="password" 
+                  name="password"
+                  value={loginFormData.password}
+                  onChange={handleLoginInputChange}
+                  placeholder="Enter your password" 
+                  required
+                  minLength={8}
+                  style={{ 
+                    width: '100%', 
+                    padding: '12px',
+                    border: '1px solid var(--border-light)',
+                    borderRadius: '4px',
+                    fontSize: '14px'
+                  }}
+                />
+              </div>
+              
+              <button 
+                type="submit"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  backgroundColor: 'var(--primary)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontSize: '16px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.3s'
+                }}
+              >
+                Log In
+              </button>
+              
+              <div style={{
+                marginTop: '20px',
+                textAlign: 'center',
+                fontSize: '14px',
+                color: 'var(--text-gray)'
+              }}>
+                Don't have an account? 
+                <span 
+                  style={{
+                    color: 'var(--primary)',
+                    cursor: 'pointer',
+                    marginLeft: '5px',
+                    fontWeight: '500'
+                  }}
+                  onClick={() => {
+                    setShowLoginModal(false);
+                    setShowSignUpModal(true);
+                  }}
+                >
+                  Sign Up
                 </span>
               </div>
             </form>

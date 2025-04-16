@@ -2780,11 +2780,22 @@ Sincerely,
             <div className="profile-image" style={{ 
               display: "flex", 
               alignItems: "center", 
-              justifyContent: "center", 
-              fontSize: "18px",
-              color: "var(--text-gray)"
+              justifyContent: "center",
+              margin: "15px auto",
+              borderRadius: "8px",
+              overflow: "hidden",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+              maxWidth: "280px"
             }}>
-              Upload your resume to get a score
+              <img 
+                src="https://th.bing.com/th/id/OIP.v_KqaJBVSQaLkepvMZw-nAHaEK?pid=ImgDet&w=208&h=117&c=7&dpr=1.5" 
+                alt="Resume strength meter" 
+                style={{ 
+                  width: "100%",
+                  height: "auto",
+                  display: "block"
+                }}
+              />
             </div>
             <button 
               className="update-btn"

@@ -239,7 +239,7 @@ export function ChatWidget() {
                 <div className="message-container">
                   <div className="message-avatar bot-message-avatar"></div>
                   <div className="message bot">
-                    <span className="typing-indicator">...</span>
+                    <span className="typing-indicator"> Thinking......</span>
                   </div>
                 </div>
               )}

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import './App.css'
-import { ChatWidget } from './components/ChatWidget'
 import { Link, Routes, Route, useNavigate } from 'react-router-dom'
 import ProjectIdeasAI from './pages/ProjectIdeasAI'
 import InterviewReadyAI from './pages/InterviewReadyAI'
@@ -1292,9 +1291,6 @@ function HomePage() {
           </div>
         </aside>
       </div>
-
-      {/* Chat Widget */}
-      <ChatWidget />
 
       {/* Sign Up Modal */}
       {showSignUpModal && (

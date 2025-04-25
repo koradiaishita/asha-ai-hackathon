@@ -1637,9 +1637,6 @@ function MentorMatchAI() {
           </div>
         </div>
       )}
-
-      {/* Chat Widget */}
-      <ChatWidget />
     </div>
   </div>
   );

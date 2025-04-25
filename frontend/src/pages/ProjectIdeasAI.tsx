@@ -1340,9 +1340,6 @@ function ProjectIdeasAI() {
           </div>
         </aside>
       </div>
-
-      {/* Chat Widget */}
-      <ChatWidget />
     </div>
   );
 }

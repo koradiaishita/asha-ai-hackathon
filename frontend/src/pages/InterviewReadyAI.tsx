@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import { ChatWidget } from '../components/ChatWidget';
 import '../App.css';
 
 function InterviewReadyAI() {
@@ -785,9 +784,6 @@ function InterviewReadyAI() {
         </aside>
       </div>
 
-      {/* Chat Widget */}
-      <ChatWidget />
-
       {/* Interview Tracker Modal */}
       {showInterviewTracker && (
         <div style={{
@@ -1006,6 +1002,10 @@ function InterviewReadyAI() {
                                 border: "none",
                                 borderRadius: "5px",
                                 padding: "5px 10px",
+                                cursor: "pointer"
+                              }}
+                            >
+                              View Notes
                             </button>
                             <button
                               onClick={() => handleDeleteInterview(index)}
@@ -1332,19 +1332,21 @@ function InterviewReadyAI() {
             </div>
             
             <div style={{ marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>6. Mirror Appropriately</h3>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>6. Prepare Your Materials</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Subtly match the interviewer's communication style and energy level to build rapport.
-                Don't overdo mirroring—it should feel natural, not forced.
+                Have a copy of your resume, the job description, and prepared notes within reach.
+                Keep a notepad and pen handy for taking notes during the interview.
+                Have a glass of water nearby in case your throat gets dry.
               </p>
             </div>
             
-            <div>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>7. Practice Before the Interview</h3>
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>7. Practice Virtual Interview Etiquette</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Record yourself during mock interviews to identify unconscious body language habits.
-                Practice with a friend who can provide feedback on your nonverbal communication.
-                Rehearse in similar attire and setting as the actual interview to feel more comfortable.
+                Join the meeting 5-10 minutes early to address any last-minute technical issues.
+                Mute yourself when not speaking if there's any background noise.
+                Speak clearly and slightly slower than normal, pausing occasionally to account for possible audio delays.
+                If experiencing technical difficulties, stay calm and communicate the issue professionally.
               </p>
             </div>
           </div>
@@ -1393,72 +1395,75 @@ function InterviewReadyAI() {
             <h2 style={{ marginBottom: "20px", color: "var(--primary)" }}>Salary Negotiation Guide</h2>
             
             <div style={{ marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>1. Research Your Market Value</h3>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>1. Do Your Research</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Use sites like Glassdoor, Payscale, and LinkedIn Salary to research typical compensation for your role, experience level, and location.
-                Speak with industry colleagues or recruiters to gather additional data points.
-                Consider your unique skills and qualifications that might place you above the average.
+                Research salary ranges for your position, industry, and location using websites like Glassdoor, LinkedIn Salary, and PayScale.
+                Understand the company's compensation structure and benefits package if possible.
+                Know your market value based on your skills, experience, and qualifications.
               </p>
             </div>
             
             <div style={{ marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>2. Delay Salary Discussions</h3>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>2. Timing is Everything</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                When possible, avoid sharing your salary expectations early in the interview process.
-                If asked directly, you can say: "I'd like to learn more about the role and responsibilities before discussing compensation."
-                If pressed, provide a salary range rather than a specific number.
+                Wait until you have a formal job offer before discussing compensation.
+                If asked about salary expectations earlier, try to postpone the conversation or provide a range based on your research.
+                Negotiate when you have the most leverage—after they've decided they want you but before you've accepted.
               </p>
             </div>
             
             <div style={{ marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>3. Let the Employer Make the First Offer</h3>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>3. Consider the Total Package</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Ideally, let the employer name a figure first to avoid undervaluing yourself.
-                When they make an offer, thank them and ask for time to consider it (24-48 hours is reasonable).
-                Use this time to carefully evaluate the entire compensation package, not just the base salary.
+                Look beyond the base salary to evaluate the entire compensation package, including:
+                Benefits (health insurance, retirement plans, etc.)
+                Paid time off and flexible work arrangements
+                Professional development opportunities
+                Stock options or equity
+                Bonuses and performance incentives
               </p>
             </div>
             
             <div style={{ marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>4. Make a Counter-Offer</h3>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>4. Use the Right Language</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Begin your response by expressing enthusiasm for the role and appreciation for the offer.
-                Present your counter-offer at the higher end of your researched range.
-                Justify your counter with specific points about your skills, experience, and the value you'll bring.
+                Frame your negotiation in collaborative rather than confrontational terms.
+                Use phrases like "I'm excited about this opportunity and want to make it work" or "Based on my research and the value I can bring..."
+                Express appreciation for the offer before moving into negotiation.
               </p>
             </div>
             
             <div style={{ marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>5. Consider the Total Package</h3>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>5. Practice Your Pitch</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Remember that compensation includes more than just base salary (benefits, bonuses, equity, PTO, flexibility, etc.).
-                If there's limited flexibility on salary, negotiate for improvements in other areas of the package.
-                Prioritize the elements that matter most to you and focus your negotiations there.
+                Rehearse your negotiation talking points with a friend or mentor.
+                Prepare concrete examples of your accomplishments and how they translate to value for the company.
+                Anticipate potential objections and plan your responses.
               </p>
             </div>
             
             <div style={{ marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>6. Use the Right Language</h3>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>6. Be Willing to Walk Away</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Frame your requests collaboratively rather than adversarially: "How can we find a package that works for both of us?"
-                Use confident but respectful language: "Based on my research and experience, I was expecting a salary closer to X."
-                Express gratitude throughout the process, regardless of the outcome.
+                Know your bottom line—the minimum offer you're willing to accept.
+                Be prepared to respectfully decline if the final offer doesn't meet your needs.
+                Keep your job search active until you've signed a contract you're satisfied with.
               </p>
             </div>
             
             <div>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>7. Get It in Writing</h3>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>7. Get It In Writing</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Once you've reached an agreement, request a formal offer letter that details all aspects of the compensation package.
-                Review the letter carefully to ensure it matches your understanding of the agreement.
-                Don't be afraid to ask for clarification on any unclear items before accepting.
+                Once you've reached an agreement, request a written offer that includes all the details you've negotiated.
+                Review the document carefully before signing.
+                Follow up with a thank-you note expressing your appreciation for the negotiation process.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Virtual Interview Best Practices Modal */}
+      {/* Virtual Interview Tips Modal */}
       {showVirtualInterviewTips && (
         <div style={{
           position: "fixed",
@@ -1502,67 +1507,68 @@ function InterviewReadyAI() {
             <div style={{ marginBottom: "20px" }}>
               <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>1. Test Your Technology</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Test your camera, microphone, and internet connection at least 24 hours before the interview.
-                Familiarize yourself with the video platform being used (Zoom, Microsoft Teams, Google Meet, etc.).
-                Have a backup plan ready in case of technical difficulties (phone number to call, alternative device).
+                Check your internet connection, camera, and microphone at least a day before the interview.
+                Download and test the required video conferencing software.
+                Have a backup plan (like a phone number to call) in case of technical difficulties.
               </p>
             </div>
             
             <div style={{ marginBottom: "20px" }}>
               <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>2. Set Up Your Environment</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Choose a quiet location with minimal background distractions.
-                Ensure you have good lighting on your face (natural light is best, or position a lamp in front of you).
-                Arrange a neutral, professional background or use a simple virtual background if needed.
-                Position your camera at eye level and sit at an appropriate distance (head and shoulders should be visible).
+                Choose a quiet location with minimal background noise and distractions.
+                Ensure good lighting that illuminates your face evenly (avoid backlight from windows).
+                Set up a neutral, professional background or use a simple virtual background if needed.
+                Position your camera at eye level and at a distance that frames your head and shoulders.
               </p>
             </div>
             
             <div style={{ marginBottom: "20px" }}>
               <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>3. Dress Professionally</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Dress as you would for an in-person interview, including bottoms (in case you need to stand up).
-                Avoid busy patterns or bright colors that can be distracting on camera.
-                Consider how your outfit appears on screen—test your appearance in advance.
+                Dress completely as you would for an in-person interview, even below camera view.
+                Avoid bright patterns or colors that may be distracting on camera.
+                Consider how your clothing appears against your background.
               </p>
             </div>
             
             <div style={{ marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>4. Mind Your Virtual Body Language</h3>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>4. Master Virtual Communication</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Look at the camera (not the screen) when speaking to create the impression of eye contact.
-                Sit up straight with good posture and avoid excessive movement.
-                Nod and smile to show engagement, as some nonverbal cues are lost in virtual settings.
-                Keep hand gestures within the frame when emphasizing points.
+                Look directly at the camera when speaking to create the impression of eye contact.
+                Speak clearly and slightly slower than in normal conversation.
+                Avoid interrupting others—virtual conversations often have slight delays.
+                Use appropriate hand gestures and posture to appear engaged.
               </p>
             </div>
             
             <div style={{ marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>5. Eliminate Distractions</h3>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>5. Prepare Your Materials</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Turn off notifications on your computer and phone.
-                Close unnecessary browser tabs and applications.
-                Inform household members about your interview to prevent interruptions.
-                Have a "do not disturb" sign ready if needed.
+                Have your resume, the job description, and prepared notes nearby but out of camera view.
+                Keep a glass of water within reach.
+                Close unnecessary applications and browser tabs to avoid distractions.
+                Prepare digital copies of any materials you might need to share.
               </p>
             </div>
             
             <div style={{ marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>6. Prepare Your Materials</h3>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>6. Minimize Distractions</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Have a copy of your resume, the job description, and prepared notes within reach.
-                Keep a notepad and pen handy for taking notes during the interview.
-                Have a glass of water nearby in case your throat gets dry.
+                Turn off phone notifications and alarms.
+                Inform household members about your interview to avoid interruptions.
+                Keep pets in another room if possible.
+                Close windows to reduce outside noise.
               </p>
             </div>
             
             <div>
-              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>7. Practice Virtual Interview Etiquette</h3>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>7. Follow Up Effectively</h3>
               <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
-                Join the meeting 5-10 minutes early to address any last-minute technical issues.
-                Mute yourself when not speaking if there's any background noise.
-                Speak clearly and slightly slower than normal, pausing occasionally to account for possible audio delays.
-                If experiencing technical difficulties, stay calm and communicate the issue professionally.
+                Send a thank-you email within 24 hours of your interview.
+                Reference specific points from your conversation to personalizeyour message.
+                Express continued interest in the position and company.
+                Inquire about next steps in the hiring process if they weren't mentioned during the interview.
               </p>
             </div>
           </div>

@@ -1154,9 +1154,6 @@ Your AI-Assistant</span>
           </div>
         </aside>
       </div>
-
-      {/* Chat Widget */}
-      <ChatWidget />
     </div>
   );
 }

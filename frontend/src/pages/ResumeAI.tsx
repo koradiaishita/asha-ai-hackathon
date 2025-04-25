@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, ChangeEvent } from 'react';
-import { ChatWidget } from '../components/ChatWidget';
 import { ResumeFeatureContent } from '../components/resume-features/ResumeFeatureContent';
 import { ProjectRecommendations } from '../components/ProjectRecommendations';
 import '../App.css';
@@ -2822,9 +2821,6 @@ Sincerely,
           </div>
         </aside>
       </div>
-
-      {/* Chat Widget */}
-      <ChatWidget />
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ChatWidget } from '../components/ChatWidget';
 import '../App.css';
 
 function UpskillNavigator() {
@@ -994,9 +993,6 @@ function UpskillNavigator() {
           </div>
         </aside>
       </div>
-
-      {/* Chat Widget */}
-      <ChatWidget />
     </div>
   );
 }

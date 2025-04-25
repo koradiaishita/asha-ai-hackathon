@@ -2656,8 +2656,8 @@ Sincerely,
       {/* Header */}
       <header className="header">
         <div className="logo">
-          <span className="herkey-logo">JobsForHer</span>
-          <span className="turns-ten">empowering women</span>
+          <span className="herkey-logo">HerKey Saarthi</span>
+          <span className="turns-ten">Your AI-Assistant</span>
         </div>
         <div className="search-container">
           <input 

@@ -10,6 +10,8 @@ function SkillUpAI() {
   const [targetJobTitle, setTargetJobTitle] = useState<string>("");
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [showAllCourses, setShowAllCourses] = useState<boolean>(false);
+  const [showAssessment, setShowAssessment] = useState<boolean>(false);
   const roadmapRef = useRef<HTMLDivElement>(null);
   const featuredCoursesRef = useRef<HTMLElement>(null);
   
@@ -25,9 +27,76 @@ function SkillUpAI() {
     }
   };
   
+  // Handle explore courses button click from the sidebar
+  const handleExploreCoursesClick = () => {
+    if (featuredCoursesRef.current) {
+      featuredCoursesRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  
   // Handle enroll now button click
   const handleEnrollNow = (courseName: string) => {
     alert(`You've successfully enrolled in "${courseName}". Your journey begins now!`);
+  };
+  
+  // Assessment related state and functions
+  const [assessmentStep, setAssessmentStep] = useState<number>(0);
+  const [assessmentAnswers, setAssessmentAnswers] = useState<Record<string, string>>({});
+  
+  // Sample assessment questions
+  const assessmentQuestions = [
+    {
+      id: "q1",
+      question: "What is your primary career goal?",
+      options: ["Career advancement", "Career transition", "Skill enhancement", "Personal interest"]
+    },
+    {
+      id: "q2",
+      question: "How much time can you dedicate to learning weekly?",
+      options: ["Less than 5 hours", "5-10 hours", "10-20 hours", "More than 20 hours"]
+    },
+    {
+      id: "q3",
+      question: "What is your learning style?",
+      options: ["Visual learner", "Hands-on projects", "Reading materials", "Video lectures"]
+    },
+    {
+      id: "q4",
+      question: "Which technical skills are you most interested in developing?",
+      options: ["Programming", "Data analysis", "Design", "Project management", "Other"]
+    },
+    {
+      id: "q5",
+      question: "What's your current proficiency level in your area of interest?",
+      options: ["Beginner", "Intermediate", "Advanced", "Expert"]
+    }
+  ];
+  
+  // Handle assessment answer selection
+  const handleAssessmentAnswer = (questionId: string, answer: string) => {
+    setAssessmentAnswers({
+      ...assessmentAnswers,
+      [questionId]: answer
+    });
+    
+    // Move to next question or finish assessment
+    if (assessmentStep < assessmentQuestions.length - 1) {
+      setAssessmentStep(assessmentStep + 1);
+    } else {
+      // Calculate results and show recommendations
+      finishAssessment();
+    }
+  };
+  
+  // Handle finishing the assessment
+  const finishAssessment = () => {
+    // In a real app, this would analyze the answers and provide personalized recommendations
+    setTimeout(() => {
+      alert("Based on your assessment, we recommend the Data Science Fundamentals course to get started. We've also prepared a personalized learning path for you!");
+      setShowAssessment(false);
+      setAssessmentStep(0);
+      setAssessmentAnswers({});
+    }, 1000);
   };
   
   // Handle category selection
@@ -132,13 +201,34 @@ function SkillUpAI() {
     }, 1000);
   };
 
+  // Handle start assessment button click
+  const handleStartAssessment = () => {
+    setShowAssessment(true);
+  };
+  
+  // Handle view all courses button click
+  const handleViewAllCourses = () => {
+    setShowAllCourses(true);
+    
+    if (featuredCoursesRef.current) {
+      featuredCoursesRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  
+  // Handle path selection
+  const handlePathSelect = (path: string) => {
+    alert(`You've selected the ${path} learning path. We'll prepare a customized curriculum for you.`);
+  };
+
   return (
     <div className="app">
       {/* Header */}
       <header className="header">
         <div className="logo">
-          <span className="herkey-logo">JobsForHer</span>
-          <span className="turns-ten">empowering women</span>
+          <span className="herkey-logo">HerKey Saarthi
+          </span>
+          <span className="turns-ten">
+Your AI-Assistant</span>
         </div>
         <div className="search-container">
           <input 
@@ -437,7 +527,7 @@ function SkillUpAI() {
           <section className="featured-jobs" ref={featuredCoursesRef}>
             <div className="section-header" style={{ display: "flex", justifyContent: "space-between", marginBottom: "15px" }}>
               <h2>Featured Courses</h2>
-              <span style={{ color: "var(--primary)", cursor: "pointer" }}>View all →</span>
+              <span style={{ color: "var(--primary)", cursor: "pointer" }} onClick={handleViewAllCourses}>View all →</span>
             </div>
             
             <div style={{ 
@@ -544,6 +634,357 @@ function SkillUpAI() {
               </div>
             </div>
           </section>
+          
+          {/* Additional courses section that shows when "View all" is clicked */}
+          {showAllCourses && (
+            <section className="featured-jobs">
+              <h2>All Courses by Category</h2>
+              
+              {/* HR Courses */}
+              <div style={{ marginBottom: "30px" }}>
+                <h3 style={{ marginBottom: "15px", fontSize: "18px", fontWeight: "600", color: "var(--primary)" }}>Human Resources</h3>
+                <div style={{ 
+                  display: "grid", 
+                  gridTemplateColumns: "repeat(3, 1fr)", 
+                  gap: "15px"
+                }}>
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>HR Analytics & Metrics</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Data-driven HR decision making</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹1,999</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("HR Analytics & Metrics")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Diversity & Inclusion in Workplace</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Building inclusive workplace cultures</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹2,499</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("Diversity & Inclusion in Workplace")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Talent Acquisition Strategies</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Modern recruitment techniques</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹2,299</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("Talent Acquisition Strategies")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Generative AI Courses */}
+              <div style={{ marginBottom: "30px" }}>
+                <h3 style={{ marginBottom: "15px", fontSize: "18px", fontWeight: "600", color: "var(--primary)" }}>Generative AI</h3>
+                <div style={{ 
+                  display: "grid", 
+                  gridTemplateColumns: "repeat(3, 1fr)", 
+                  gap: "15px"
+                }}>
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}>
+                      <div style={{ 
+                        position: "absolute", 
+                        top: "10px", 
+                        right: "10px", 
+                        background: "#e8f5e9", 
+                        borderRadius: "4px", 
+                        padding: "5px 10px",
+                        fontSize: "12px",
+                        fontWeight: "bold",
+                        color: "#4caf50"
+                      }}>
+                        Hot Topic
+                      </div>
+                    </div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Prompt Engineering for Business</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Master LLM interactions for work</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹3,499</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("Prompt Engineering for Business")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Building AI Applications</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>From concept to deployment</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹4,999</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("Building AI Applications")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>AI for Content Creation</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Using AI tools for creative work</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹2,799</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("AI for Content Creation")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Machine Learning Courses */}
+              <div style={{ marginBottom: "30px" }}>
+                <h3 style={{ marginBottom: "15px", fontSize: "18px", fontWeight: "600", color: "var(--primary)" }}>Machine Learning</h3>
+                <div style={{ 
+                  display: "grid", 
+                  gridTemplateColumns: "repeat(3, 1fr)", 
+                  gap: "15px"
+                }}>
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>ML Fundamentals</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Core algorithms and methodologies</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹3,299</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("ML Fundamentals")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Deep Learning with PyTorch</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Neural networks & advanced models</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹4,499</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("Deep Learning with PyTorch")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Computer Vision Essentials</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Image recognition and processing</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹3,899</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("Computer Vision Essentials")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* UX/UI Design Courses */}
+              <div style={{ marginBottom: "30px" }}>
+                <h3 style={{ marginBottom: "15px", fontSize: "18px", fontWeight: "600", color: "var(--primary)" }}>UX/UI Design</h3>
+                <div style={{ 
+                  display: "grid", 
+                  gridTemplateColumns: "repeat(3, 1fr)", 
+                  gap: "15px"
+                }}>
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>UI Design with Figma</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Modern interface design principles</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹2,699</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("UI Design with Figma")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>UX Research & Testing</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>User-centered design methodologies</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹2,999</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("UX Research & Testing")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Mobile App Design</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Creating seamless mobile experiences</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹3,199</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("Mobile App Design")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Software Development & Testing */}
+              <div style={{ marginBottom: "30px" }}>
+                <h3 style={{ marginBottom: "15px", fontSize: "18px", fontWeight: "600", color: "var(--primary)" }}>Software Development & Testing</h3>
+                <div style={{ 
+                  display: "grid", 
+                  gridTemplateColumns: "repeat(3, 1fr)", 
+                  gap: "15px"
+                }}>
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Modern JavaScript Development</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>ES6+ and advanced frameworks</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹2,499</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("Modern JavaScript Development")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Quality Assurance & Testing</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Automated testing strategies</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹2,799</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("Quality Assurance & Testing")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Cloud-Native Development</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Building scalable applications</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹3,599</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("Cloud-Native Development")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* IT Support */}
+              <div style={{ marginBottom: "30px" }}>
+                <h3 style={{ marginBottom: "15px", fontSize: "18px", fontWeight: "600", color: "var(--primary)" }}>IT Support</h3>
+                <div style={{ 
+                  display: "grid", 
+                  gridTemplateColumns: "repeat(3, 1fr)", 
+                  gap: "15px"
+                }}>
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>IT Support Fundamentals</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Core technical support skills</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹1,999</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("IT Support Fundamentals")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Network Security</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>Protecting organizational systems</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹2,899</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("Network Security")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="job-card" style={{ padding: "0", overflow: "hidden" }}>
+                    <div style={{ height: "120px", background: "#f5f5f5", position: "relative" }}></div>
+                    <div style={{ padding: "15px" }}>
+                      <h3 style={{ marginBottom: "5px", fontSize: "16px" }}>Cloud Infrastructure Management</h3>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>AWS, Azure and Google Cloud</p>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "bold" }}>₹3,299</span>
+                        <button className="update-btn" style={{ padding: "5px 10px", fontSize: "14px" }}
+                          onClick={() => handleEnrollNow("Cloud Infrastructure Management")}>
+                          Enroll Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
           
           {/* Popular Categories */}
           <section className="featured-jobs">
@@ -660,7 +1101,7 @@ function SkillUpAI() {
             <div className="profile-image" style={{ height: "150px", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <p style={{ color: "var(--text-gray)" }}>No courses enrolled yet</p>
             </div>
-            <button className="update-btn">Explore Courses</button>
+            <button className="update-btn" onClick={handleExploreCoursesClick}>Explore Courses</button>
           </div>
 
           <div className="career-break-card">
@@ -669,24 +1110,43 @@ function SkillUpAI() {
               Take our free skill assessment to discover your strengths and areas for improvement.
             </p>
             <p className="scholarship-text">15-minute assessment</p>
-            <button className="update-btn" style={{ width: "100%", marginTop: "15px" }}>Start Assessment</button>
+            <button className="update-btn" style={{ width: "100%", marginTop: "15px" }} onClick={handleStartAssessment}>Start Assessment</button>
           </div>
           
+          {showAssessment && (
+            <div className="career-break-card" style={{ marginTop: "20px" }}>
+              <h2 className="card-title">Assessment Question</h2>
+              <p className="card-subtitle">{assessmentQuestions[assessmentStep].question}</p>
+              <div style={{ marginTop: "15px" }}>
+                {assessmentQuestions[assessmentStep].options.map((option, index) => (
+                  <button 
+                    key={index} 
+                    className="update-btn" 
+                    style={{ width: "100%", marginBottom: "10px" }} 
+                    onClick={() => handleAssessmentAnswer(assessmentQuestions[assessmentStep].id, option)}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="career-break-card" style={{ marginTop: "20px" }}>
             <h2 className="card-title">Learning Paths</h2>
             <p className="card-subtitle">
               Curated course sequences to master a specific role or technology
             </p>
             <div style={{ marginTop: "15px" }}>
-              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }}>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }} onClick={() => handlePathSelect("Data Scientist Path")}>
                 <span style={{ marginRight: "10px", color: "var(--primary)" }}>→</span>
                 <span>Data Scientist Path</span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }}>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }} onClick={() => handlePathSelect("Full-Stack Developer Path")}>
                 <span style={{ marginRight: "10px", color: "var(--primary)" }}>→</span>
                 <span>Full-Stack Developer Path</span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }}>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }} onClick={() => handlePathSelect("Product Manager Path")}>
                 <span style={{ marginRight: "10px", color: "var(--primary)" }}>→</span>
                 <span>Product Manager Path</span>
               </div>

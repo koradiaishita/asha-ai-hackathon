@@ -18,11 +18,11 @@
       language-code="en"
       max-query-length="-1">
       <df-messenger-chat-bubble
-        chat-title="HerKey Saarthi"
+        chat-title="HerKey Saarthi AI Assistant"
         chat-subtitle="Your AI-Assistant"
         chat-icon="https://img.icons8.com/fluency/96/chatbot.png"
         placeholder-text="Ask something about your career..."
-        bot-writing-text="Thinking...">
+        bot-writing-text="HerKey Saarthi is typing...">
       </df-messenger-chat-bubble>
     </df-messenger>
     <style>
@@ -91,14 +91,17 @@
 
         /* Chat window dimensions */
         --df-messenger-chat-window-width: 500px; /* Increased from default 320px */
-        --df-messenger-chat-window-height: 620px; /* Slightly increased for better proportions */
+        --df-messenger-chat-window-height: 620px; 
+        --df-messenger-chat-scroll-button-font-color: #8e4777; /* --primary from your CSS */ 
+        /* Slightly increased for better proportions */
+        --df-messenger-message-bot-writing-background: #f6f6f6; /* --gray-bg from your CSS */
       }
 
       /* Add box shadow to the chat window to match your UI */
       df-messenger-chat {
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
         border-radius: 15px;
-        animation: slideIn 0.3s ease-out;
+        animation: slideIn 0.5s ease-out;
       }
 
       /* Animation for chat opening */

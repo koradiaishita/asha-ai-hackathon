@@ -9,11 +9,50 @@ function ProjectIdeasAI() {
   const [projectIdeas, setProjectIdeas] = useState<any>(null);
   const [isGeneratingProjects, setIsGeneratingProjects] = useState<boolean>(false);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
+  const [showToolsPanel, setShowToolsPanel] = useState<boolean>(false);
+  const [selectedPortfolio, setSelectedPortfolio] = useState<string | null>(null);
+  const [showProjectTracker, setShowProjectTracker] = useState<boolean>(false);
   const projectsRef = useRef<HTMLDivElement>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
+  const portfolioRef = useRef<HTMLDivElement>(null);
+  const trackerRef = useRef<HTMLDivElement>(null);
   
   // Add a navigation handler that will be implemented when router is installed
   const navigateToHome = () => {
     window.location.href = '/'; // Simple navigation without router
+  };
+
+  // Handle track your projects button click
+  const handleTrackProjectsClick = () => {
+    setShowProjectTracker(true);
+    // Scroll to the tracker panel after it renders
+    setTimeout(() => {
+      if (trackerRef.current) {
+        trackerRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
+  // Handle access tools button click
+  const handleAccessToolsClick = () => {
+    setShowToolsPanel(true);
+    // Scroll to the tools panel after it renders
+    setTimeout(() => {
+      if (toolsRef.current) {
+        toolsRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+  
+  // Handle portfolio view
+  const handleViewPortfolio = (portfolioType: string) => {
+    setSelectedPortfolio(portfolioType);
+    // Scroll to the portfolio section after it renders
+    setTimeout(() => {
+      if (portfolioRef.current) {
+        portfolioRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
   };
 
   // Handle generating project ideas
@@ -383,8 +422,8 @@ function ProjectIdeasAI() {
       {/* Header */}
       <header className="header">
         <div className="logo">
-          <span className="herkey-logo">JobsForHer</span>
-          <span className="turns-ten">empowering women</span>
+          <span className="herkey-logo">HerKey Saarthi</span>
+          <span className="turns-ten">Your AI-Assistant</span>
         </div>
         <div className="search-container">
           <input 
@@ -502,19 +541,6 @@ function ProjectIdeasAI() {
               <span 
                 className="newly-added" 
                 style={{ cursor: "pointer" }} 
-                onClick={() => handleGenerateProjectIdeas("Software Development")}
-              >
-                Software Development
-              </span>
-              <span 
-                className="newly-added" 
-                style={{ cursor: "pointer" }} 
-                onClick={() => handleGenerateProjectIdeas("Data Analysis")}
-              >
-                Data Analysis
-              </span>
-              <span 
-                className="newly-added" 
                 style={{ cursor: "pointer" }} 
                 onClick={() => handleGenerateProjectIdeas("UX/UI Design")}
               >
@@ -705,6 +731,566 @@ function ProjectIdeasAI() {
               </div>
             </div>
           </section>
+          
+          {/* Project Tracker Panel - shown after clicking "Track Your Projects" */}
+          {showProjectTracker && (
+            <section className="featured-jobs" ref={trackerRef}>
+              <h2>Project Tracker</h2>
+              <div className="job-card" style={{ padding: "25px" }}>
+                <div className="job-info">
+                  <h3 className="job-title">Track your portfolio projects and measure your progress</h3>
+                  
+                  <div style={{ 
+                    padding: "20px", 
+                    background: "var(--primary-light)", 
+                    borderRadius: "8px",
+                    marginTop: "20px",
+                    marginBottom: "20px"
+                  }}>
+                    <p style={{ marginBottom: "15px", fontSize: "15px" }}>
+                      Keep track of your ongoing projects, set milestones, and showcase your completed work in a professional portfolio.
+                    </p>
+                  </div>
+                  
+                  <div style={{ marginBottom: "30px" }}>
+                    <h4 style={{ marginBottom: "15px" }}>Your Active Projects</h4>
+                    
+                    <div style={{ 
+                      display: "flex", 
+                      flexDirection: "column",
+                      gap: "15px"
+                    }}>
+                      <div style={{ 
+                        padding: "20px", 
+                        border: "1px solid var(--border-light)",
+                        borderRadius: "8px",
+                        background: "#f9f9f9" 
+                      }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px" }}>
+                          <h5 style={{ margin: 0 }}>No active projects</h5>
+                          <button className="update-btn" style={{ padding: "8px 15px", fontSize: "14px" }}>
+                            Add Project
+                          </button>
+                        </div>
+                        <p style={{ color: "var(--text-gray)", fontSize: "14px" }}>
+                          Start tracking your first project by clicking the Add Project button.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div style={{ marginBottom: "30px" }}>
+                    <h4 style={{ marginBottom: "15px" }}>Add a New Project</h4>
+                    
+                    <div style={{ 
+                      padding: "20px", 
+                      border: "1px solid var(--border-light)",
+                      borderRadius: "8px"
+                    }}>
+                      <div style={{ marginBottom: "15px" }}>
+                        <label style={{ display: "block", marginBottom: "5px", fontSize: "14px", fontWeight: "500" }}>
+                          Project Title
+                        </label>
+                        <input 
+                          type="text" 
+                          placeholder="Enter project title"
+                          style={{ 
+                            width: "100%", 
+                            padding: "10px", 
+                            borderRadius: "5px",
+                            border: "1px solid var(--border-light)"
+                          }}
+                        />
+                      </div>
+                      
+                      <div style={{ marginBottom: "15px" }}>
+                        <label style={{ display: "block", marginBottom: "5px", fontSize: "14px", fontWeight: "500" }}>
+                          Project Category
+                        </label>
+                        <select
+                          style={{ 
+                            width: "100%", 
+                            padding: "10px", 
+                            borderRadius: "5px",
+                            border: "1px solid var(--border-light)"
+                          }}
+                        >
+                          <option value="">Select category</option>
+                          <option value="Software Development">Software Development</option>
+                          <option value="Data Analysis">Data Analysis</option>
+                          <option value="UX/UI Design">UX/UI Design</option>
+                          <option value="Digital Marketing">Digital Marketing</option>
+                          <option value="Project Management">Project Management</option>
+                          <option value="Content Creation">Content Creation</option>
+                        </select>
+                      </div>
+                      
+                      <div style={{ marginBottom: "15px" }}>
+                        <label style={{ display: "block", marginBottom: "5px", fontSize: "14px", fontWeight: "500" }}>
+                          Description
+                        </label>
+                        <textarea 
+                          placeholder="Brief description of your project"
+                          style={{ 
+                            width: "100%", 
+                            padding: "10px", 
+                            borderRadius: "5px",
+                            border: "1px solid var(--border-light)",
+                            minHeight: "100px"
+                          }}
+                        />
+                      </div>
+                      
+                      <div style={{ marginBottom: "15px" }}>
+                        <label style={{ display: "block", marginBottom: "5px", fontSize: "14px", fontWeight: "500" }}>
+                          Target Completion Date
+                        </label>
+                        <input 
+                          type="date" 
+                          style={{ 
+                            width: "100%", 
+                            padding: "10px", 
+                            borderRadius: "5px",
+                            border: "1px solid var(--border-light)"
+                          }}
+                        />
+                      </div>
+                      
+                      <div style={{ marginBottom: "15px" }}>
+                        <label style={{ display: "block", marginBottom: "5px", fontSize: "14px", fontWeight: "500" }}>
+                          Skills to Showcase
+                        </label>
+                        <input 
+                          type="text" 
+                          placeholder="e.g. React, Python, UI Design (comma separated)"
+                          style={{ 
+                            width: "100%", 
+                            padding: "10px", 
+                            borderRadius: "5px",
+                            border: "1px solid var(--border-light)"
+                          }}
+                        />
+                      </div>
+                      
+                      <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+                        <button className="update-btn" style={{ padding: "10px 20px" }}>
+                          Create Project
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div style={{ textAlign: "center", marginTop: "20px" }}>
+                    <p style={{ marginBottom: "20px", color: "var(--text-gray)" }}>
+                      Track your projects to build an impressive portfolio that showcases your skills and experience.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Project Tools Panel - shown after clicking "Access Tools" */}
+          {showToolsPanel && (
+            <section className="featured-jobs" ref={toolsRef}>
+              <h2>Project Management Tools</h2>
+              <div className="job-card" style={{ padding: "25px" }}>
+                <div className="job-info">
+                  <h3 className="job-title">Tools to help you succeed with your projects</h3>
+                  
+                  <div style={{ 
+                    display: "grid", 
+                    gridTemplateColumns: "repeat(3, 1fr)", 
+                    gap: "15px",
+                    marginTop: "20px"
+                  }}>
+                    <div 
+                      style={{ 
+                        padding: "20px", 
+                        border: "1px solid var(--border-light)",
+                        borderRadius: "8px",
+                        textAlign: "center",
+                        cursor: "pointer"
+                      }}
+                    >
+                      <div style={{ fontSize: "32px", marginBottom: "10px" }}>📋</div>
+                      <h4 style={{ marginBottom: "10px" }}>Kanban Board</h4>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>
+                        Track tasks with a visual project board
+                      </p>
+                    </div>
+                    
+                    <div 
+                      style={{ 
+                        padding: "20px", 
+                        border: "1px solid var(--border-light)",
+                        borderRadius: "8px",
+                        textAlign: "center",
+                        cursor: "pointer"
+                      }}
+                    >
+                      <div style={{ fontSize: "32px", marginBottom: "10px" }}>⏱️</div>
+                      <h4 style={{ marginBottom: "10px" }}>Time Tracker</h4>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>
+                        Log hours spent on project tasks
+                      </p>
+                    </div>
+                    
+                    <div 
+                      style={{ 
+                        padding: "20px", 
+                        border: "1px solid var(--border-light)",
+                        borderRadius: "8px",
+                        textAlign: "center",
+                        cursor: "pointer"
+                      }}
+                    >
+                      <div style={{ fontSize: "32px", marginBottom: "10px" }}>🔗</div>
+                      <h4 style={{ marginBottom: "10px" }}>Resource Links</h4>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>
+                        Save and organize helpful resources
+                      </p>
+                    </div>
+                    
+                    <div 
+                      style={{ 
+                        padding: "20px", 
+                        border: "1px solid var(--border-light)",
+                        borderRadius: "8px",
+                        textAlign: "center",
+                        cursor: "pointer"
+                      }}
+                    >
+                      <div style={{ fontSize: "32px", marginBottom: "10px" }}>💼</div>
+                      <h4 style={{ marginBottom: "10px" }}>Portfolio Builder</h4>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>
+                        Create a showcase of your best work
+                      </p>
+                    </div>
+                    
+                    <div 
+                      style={{ 
+                        padding: "20px", 
+                        border: "1px solid var(--border-light)",
+                        borderRadius: "8px",
+                        textAlign: "center",
+                        cursor: "pointer"
+                      }}
+                    >
+                      <div style={{ fontSize: "32px", marginBottom: "10px" }}>📊</div>
+                      <h4 style={{ marginBottom: "10px" }}>Progress Analytics</h4>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>
+                        Visualize your productivity patterns
+                      </p>
+                    </div>
+                    
+                    <div 
+                      style={{ 
+                        padding: "20px", 
+                        border: "1px solid var(--border-light)",
+                        borderRadius: "8px",
+                        textAlign: "center",
+                        cursor: "pointer"
+                      }}
+                    >
+                      <div style={{ fontSize: "32px", marginBottom: "10px" }}>🔄</div>
+                      <h4 style={{ marginBottom: "10px" }}>GitHub Integration</h4>
+                      <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>
+                        Connect and sync with your repositories
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div style={{ marginTop: "30px", textAlign: "center" }}>
+                    <p style={{ marginBottom: "20px", color: "var(--text-gray)" }}>
+                      Click on any tool above to get started with managing your projects more effectively.
+                    </p>
+                    <button className="update-btn">
+                      Explore All Tools
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+          
+          {/* Portfolio Showcase - shown after clicking on a portfolio link */}
+          {selectedPortfolio && (
+            <section className="featured-jobs" ref={portfolioRef}>
+              <h2>Featured Portfolio: {selectedPortfolio}</h2>
+              <div className="job-card" style={{ padding: "25px" }}>
+                <div className="job-info">
+                  <h3 className="job-title">Inspiring work from a JobsForHer community member</h3>
+                  
+                  {selectedPortfolio === "UX Designer Portfolio" && (
+                    <div>
+                      <div style={{ 
+                        padding: "20px", 
+                        background: "var(--primary-light)", 
+                        borderRadius: "8px",
+                        marginTop: "20px",
+                        marginBottom: "20px"
+                      }}>
+                        <div style={{ display: "flex", gap: "15px", marginBottom: "15px" }}>
+                          <div style={{ 
+                            width: "80px", 
+                            height: "80px", 
+                            borderRadius: "50%", 
+                            background: "#e0e0e0",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "32px"
+                          }}>
+                            👩‍💼
+                          </div>
+                          <div>
+                            <h4 style={{ marginBottom: "5px" }}>Priya Sharma</h4>
+                            <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>UX Designer with 4+ years experience</p>
+                            <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>Career transitioned from Graphic Design</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div style={{ marginBottom: "25px" }}>
+                        <h4 style={{ marginBottom: "15px" }}>Featured Projects</h4>
+                        
+                        <div style={{ 
+                          display: "grid", 
+                          gridTemplateColumns: "repeat(2, 1fr)", 
+                          gap: "20px",
+                          marginBottom: "20px"
+                        }}>
+                          <div style={{ border: "1px solid var(--border-light)", borderRadius: "8px", overflow: "hidden" }}>
+                            <div style={{ height: "180px", background: "#f5f5f5", position: "relative" }}></div>
+                            <div style={{ padding: "15px" }}>
+                              <h5 style={{ marginBottom: "5px" }}>HealthTrack Mobile App Redesign</h5>
+                              <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>
+                                Complete UX overhaul of a health monitoring application, focusing on accessibility and user engagement.
+                              </p>
+                              <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>User Research</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Wireframing</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Figma</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Usability Testing</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div style={{ border: "1px solid var(--border-light)", borderRadius: "8px", overflow: "hidden" }}>
+                            <div style={{ height: "180px", background: "#f5f5f5", position: "relative" }}></div>
+                            <div style={{ padding: "15px" }}>
+                              <h5 style={{ marginBottom: "5px" }}>E-commerce Design System</h5>
+                              <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>
+                                Created a comprehensive design system for an e-commerce platform with over 200 components and design patterns.
+                              </p>
+                              <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Design Systems</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Component Library</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Documentation</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div style={{ fontSize: "14px", marginBottom: "20px" }}>
+                          <p style={{ marginBottom: "15px" }}>
+                            <b>Key Achievements:</b>
+                          </p>
+                          <ul style={{ marginLeft: "20px", color: "var(--text-gray)" }}>
+                            <li style={{ marginBottom: "10px" }}>Increased user engagement by 42% for the HealthTrack app through improved UX</li>
+                            <li style={{ marginBottom: "10px" }}>Reduced design inconsistencies by 78% with the implementation of a standardized design system</li>
+                            <li style={{ marginBottom: "10px" }}>Won the "Design Excellence" award at the India UX Conference 2024</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {selectedPortfolio === "Full-Stack Developer Projects" && (
+                    <div>
+                      <div style={{ 
+                        padding: "20px", 
+                        background: "var(--primary-light)", 
+                        borderRadius: "8px",
+                        marginTop: "20px",
+                        marginBottom: "20px"
+                      }}>
+                        <div style={{ display: "flex", gap: "15px", marginBottom: "15px" }}>
+                          <div style={{ 
+                            width: "80px", 
+                            height: "80px", 
+                            borderRadius: "50%", 
+                            background: "#e0e0e0",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "32px"
+                          }}>
+                            👩‍💻
+                          </div>
+                          <div>
+                            <h4 style={{ marginBottom: "5px" }}>Ananya Patel</h4>
+                            <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>Full-Stack Developer</p>
+                            <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>Career transitioned from Marketing</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div style={{ marginBottom: "25px" }}>
+                        <h4 style={{ marginBottom: "15px" }}>Featured Projects</h4>
+                        
+                        <div style={{ 
+                          display: "grid", 
+                          gridTemplateColumns: "repeat(2, 1fr)", 
+                          gap: "20px",
+                          marginBottom: "20px"
+                        }}>
+                          <div style={{ border: "1px solid var(--border-light)", borderRadius: "8px", overflow: "hidden" }}>
+                            <div style={{ height: "180px", background: "#f5f5f5", position: "relative" }}></div>
+                            <div style={{ padding: "15px" }}>
+                              <h5 style={{ marginBottom: "5px" }}>Community Marketplace Platform</h5>
+                              <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>
+                                Built a full-stack marketplace for local artisans to sell handcrafted products with payment processing and vendor dashboards.
+                              </p>
+                              <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>React</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Node.js</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>MongoDB</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Stripe API</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div style={{ border: "1px solid var(--border-light)", borderRadius: "8px", overflow: "hidden" }}>
+                            <div style={{ height: "180px", background: "#f5f5f5", position: "relative" }}></div>
+                            <div style={{ padding: "15px" }}>
+                              <h5 style={{ marginBottom: "5px" }}>Task Management SaaS</h5>
+                              <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>
+                                Developed a team collaboration tool with real-time updates, task assignment, and performance analytics.
+                              </p>
+                              <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Vue.js</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Express</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>PostgreSQL</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>WebSockets</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div style={{ fontSize: "14px", marginBottom: "20px" }}>
+                          <p style={{ marginBottom: "15px" }}>
+                            <b>Key Achievements:</b>
+                          </p>
+                          <ul style={{ marginLeft: "20px", color: "var(--text-gray)" }}>
+                            <li style={{ marginBottom: "10px" }}>Completed full-stack transition within 10 months through self-learning and bootcamp</li>
+                            <li style={{ marginBottom: "10px" }}>Marketplace platform now supports 50+ local businesses with over ₹2.5M in monthly transactions</li>
+                            <li style={{ marginBottom: "10px" }}>Open-sourced components used by 200+ developers on GitHub</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {selectedPortfolio === "Data Analyst Showcase" && (
+                    <div>
+                      <div style={{ 
+                        padding: "20px", 
+                        background: "var(--primary-light)", 
+                        borderRadius: "8px",
+                        marginTop: "20px",
+                        marginBottom: "20px"
+                      }}>
+                        <div style={{ display: "flex", gap: "15px", marginBottom: "15px" }}>
+                          <div style={{ 
+                            width: "80px", 
+                            height: "80px", 
+                            borderRadius: "50%", 
+                            background: "#e0e0e0",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "32px"
+                          }}>
+                            👩‍🔬
+                          </div>
+                          <div>
+                            <h4 style={{ marginBottom: "5px" }}>Neha Verma</h4>
+                            <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>Data Analyst</p>
+                            <p style={{ fontSize: "14px", color: "var(--text-gray)" }}>Career transitioned from Teaching</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div style={{ marginBottom: "25px" }}>
+                        <h4 style={{ marginBottom: "15px" }}>Featured Projects</h4>
+                        
+                        <div style={{ 
+                          display: "grid", 
+                          gridTemplateColumns: "repeat(2, 1fr)", 
+                          gap: "20px",
+                          marginBottom: "20px"
+                        }}>
+                          <div style={{ border: "1px solid var(--border-light)", borderRadius: "8px", overflow: "hidden" }}>
+                            <div style={{ height: "180px", background: "#f5f5f5", position: "relative" }}></div>
+                            <div style={{ padding: "15px" }}>
+                              <h5 style={{ marginBottom: "5px" }}>E-commerce Customer Analysis</h5>
+                              <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>
+                                Performed in-depth customer segmentation and purchase behavior analysis for an online retailer, leading to targeted marketing strategies.
+                              </p>
+                              <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Python</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Pandas</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Tableau</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Clustering</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div style={{ border: "1px solid var(--border-light)", borderRadius: "8px", overflow: "hidden" }}>
+                            <div style={{ height: "180px", background: "#f5f5f5", position: "relative" }}></div>
+                            <div style={{ padding: "15px" }}>
+                              <h5 style={{ marginBottom: "5px" }}>Healthcare Data Dashboard</h5>
+                              <p style={{ fontSize: "14px", color: "var(--text-gray)", marginBottom: "10px" }}>
+                                Created interactive dashboards visualizing patient outcomes and operational metrics for a healthcare provider.
+                              </p>
+                              <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>SQL</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Power BI</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>Data Modeling</span>
+                                <span style={{ fontSize: "12px", background: "#f1f1f1", padding: "3px 8px", borderRadius: "10px" }}>ETL</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div style={{ fontSize: "14px", marginBottom: "20px" }}>
+                          <p style={{ marginBottom: "15px" }}>
+                            <b>Key Achievements:</b>
+                          </p>
+                          <ul style={{ marginLeft: "20px", color: "var(--text-gray)" }}>
+                            <li style={{ marginBottom: "10px" }}>Identified customer segments that increased conversion rates by 28% through targeted campaigns</li>
+                            <li style={{ marginBottom: "10px" }}>Reduced hospital wait times by 32% by optimizing resource allocation based on data insights</li>
+                            <li style={{ marginBottom: "10px" }}>Completed Google Data Analytics and Microsoft Power BI certifications within 6 months</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div style={{ marginTop: "20px", textAlign: "center" }}>
+                    <p style={{ marginBottom: "20px", color: "var(--text-gray)" }}>
+                      Find inspiration from these real-world projects and start building your own portfolio today.
+                    </p>
+                    <button className="update-btn" onClick={() => setSelectedPortfolio(null)}>
+                      Back to Project Ideas
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
         </main>
 
         {/* Right Sidebar */}
@@ -714,7 +1300,7 @@ function ProjectIdeasAI() {
             <div className="profile-image" style={{ height: "150px", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <p style={{ color: "var(--text-gray)" }}>No projects added yet</p>
             </div>
-            <button className="update-btn">Track Your Projects</button>
+            <button className="update-btn" onClick={handleTrackProjectsClick}>Track Your Projects</button>
           </div>
 
           <div className="career-break-card">
@@ -723,7 +1309,13 @@ function ProjectIdeasAI() {
               Track your project progress and showcase your completed work with our portfolio builder.
             </p>
             <p className="scholarship-text">Free tools for JFH members!</p>
-            <button className="update-btn" style={{ width: "100%", marginTop: "15px" }}>Access Tools</button>
+            <button 
+              className="update-btn" 
+              style={{ width: "100%", marginTop: "15px" }} 
+              onClick={handleAccessToolsClick}
+            >
+              Access Tools
+            </button>
           </div>
           
           <div className="career-break-card" style={{ marginTop: "20px" }}>
@@ -732,15 +1324,15 @@ function ProjectIdeasAI() {
               Get inspired by browsing portfolios from women who have successfully built career-changing projects
             </p>
             <div style={{ marginTop: "15px" }}>
-              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }}>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }} onClick={() => handleViewPortfolio("UX Designer Portfolio")}>
                 <span style={{ marginRight: "10px", color: "var(--primary)" }}>→</span>
                 <span>UX Designer Portfolio</span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }}>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }} onClick={() => handleViewPortfolio("Full-Stack Developer Projects")}>
                 <span style={{ marginRight: "10px", color: "var(--primary)" }}>→</span>
                 <span>Full-Stack Developer Projects</span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }}>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }} onClick={() => handleViewPortfolio("Data Analyst Showcase")}>
                 <span style={{ marginRight: "10px", color: "var(--primary)" }}>→</span>
                 <span>Data Analyst Showcase</span>
               </div>

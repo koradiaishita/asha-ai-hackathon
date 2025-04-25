@@ -9,7 +9,67 @@ function InterviewReadyAI() {
   const [jobTitleForInterview, setJobTitleForInterview] = useState<string>("");
   const [expandedQuestions, setExpandedQuestions] = useState<{ [key: string]: boolean }>({});
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
+  const [showMockInterviewModal, setShowMockInterviewModal] = useState<boolean>(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+  const [userResponses, setUserResponses] = useState<{ [key: string]: string }>({});
+  const [mockInterviewFinished, setMockInterviewFinished] = useState<boolean>(false);
   const questionsRef = useRef<HTMLDivElement>(null);
+  
+  // Interview tracking modal state
+  const [showInterviewTracker, setShowInterviewTracker] = useState<boolean>(false);
+  const [interviews, setInterviews] = useState<Array<{
+    company: string;
+    position: string;
+    date: string;
+    status: string;
+    notes: string;
+  }>>([
+    {
+      company: "Tech Solutions Inc.",
+      position: "Senior Developer",
+      date: "2025-04-15",
+      status: "Completed",
+      notes: "Technical interview with team lead. Discussed system architecture and API design."
+    },
+    {
+      company: "Digital Innovations",
+      position: "Frontend Engineer",
+      date: "2025-04-20",
+      status: "Scheduled",
+      notes: "Second round with the product team. Prepare portfolio examples."
+    }
+  ]);
+  const [newInterview, setNewInterview] = useState({
+    company: "",
+    position: "",
+    date: "",
+    status: "Scheduled",
+    notes: ""
+  });
+  
+  // Book a session modal state
+  const [showBookingModal, setShowBookingModal] = useState<boolean>(false);
+  const [bookingInfo, setBookingInfo] = useState({
+    name: "",
+    email: "",
+    date: "",
+    time: "",
+    type: "Mock Interview"
+  });
+  const [bookSessionModal, setBookSessionModal] = useState<boolean>(false);
+  const [showBookingConfirmation, setShowBookingConfirmation] = useState<boolean>(false);
+  const [bookingFormData, setBookingFormData] = useState({
+    name: "",
+    email: "",
+    date: "",
+    time: "",
+    topic: ""
+  });
+  
+  // Resource modal states
+  const [showBodyLanguageTips, setShowBodyLanguageTips] = useState<boolean>(false);
+  const [showSalaryNegotiationGuide, setShowSalaryNegotiationGuide] = useState<boolean>(false);
+  const [showVirtualInterviewTips, setShowVirtualInterviewTips] = useState<boolean>(false);
   
   // Add a navigation handler that will be implemented when router is installed
   const navigateToHome = () => {
@@ -158,6 +218,123 @@ function InterviewReadyAI() {
         setIsDownloading(false);
       }
     }, 1000);
+  };
+
+  // Handle booking session
+  const handleBookSession = () => {
+    setBookSessionModal(true);
+  };
+  
+  // Handle closing booking modal
+  const handleCloseBookingModal = () => {
+    setShowBookingModal(false);
+  };
+
+  const handleCloseBookSession = () => {
+    setBookSessionModal(false);
+  };
+
+  const handleCloseBookingConfirmation = () => {
+    setShowBookingConfirmation(false);
+  };
+  
+  // Handle booking form input changes
+  const handleBookingInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setBookingInfo({
+      ...bookingInfo,
+      [name]: value
+    });
+  };
+  
+  // Handle submitting booking form
+  const handleSubmitBooking = () => {
+    // Basic validation
+    if (!bookingFormData.name || !bookingFormData.email || !bookingFormData.date || !bookingFormData.time || !bookingFormData.topic) {
+      alert("Please fill in all required fields");
+      return;
+    }
+    
+    // In a real app, this would send the booking info to an API
+    setBookSessionModal(false);
+    setShowBookingConfirmation(true);
+  };
+  
+  // Handle opening resource modals
+  const handleOpenBodyLanguageTips = () => {
+    setShowBodyLanguageTips(true);
+  };
+  
+  const handleOpenSalaryNegotiationGuide = () => {
+    setShowSalaryNegotiationGuide(true);
+  };
+  
+  const handleOpenVirtualInterviewTips = () => {
+    setShowVirtualInterviewTips(true);
+  };
+  
+  // Handle closing resource modals
+  const handleCloseResourceModal = () => {
+    setShowBodyLanguageTips(false);
+    setShowSalaryNegotiationGuide(false);
+    setShowVirtualInterviewTips(false);
+  };
+
+  // Handle opening the interview tracker modal
+  const handleOpenInterviewTracker = () => {
+    setShowInterviewTracker(true);
+  };
+
+  // Handle closing the interview tracker modal
+  const handleCloseInterviewTracker = () => {
+    setShowInterviewTracker(false);
+  };
+  
+  // Handle adding a new interview to the tracker
+  const handleAddInterview = () => {
+    // Basic validation
+    if (!newInterview.company || !newInterview.position || !newInterview.date) {
+      alert("Please fill in all required fields (Company, Position, and Date)");
+      return;
+    }
+    
+    // Add the new interview to the list
+    setInterviews([...interviews, newInterview]);
+    
+    // Reset the form
+    setNewInterview({
+      company: "",
+      position: "",
+      date: "",
+      status: "Scheduled",
+      notes: ""
+    });
+  };
+  
+  // Handle input changes for the new interview form
+  const handleInterviewInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setNewInterview({
+      ...newInterview,
+      [name]: value
+    });
+  };
+  
+  // Handle deleting an interview from the tracker
+  const handleDeleteInterview = (index: number) => {
+    const updatedInterviews = [...interviews];
+    updatedInterviews.splice(index, 1);
+    setInterviews(updatedInterviews);
+  };
+  
+  // Handle updating an interview status
+  const handleUpdateInterviewStatus = (index: number, newStatus: string) => {
+    const updatedInterviews = [...interviews];
+    updatedInterviews[index] = {
+      ...updatedInterviews[index],
+      status: newStatus
+    };
+    setInterviews(updatedInterviews);
   };
 
   return (
@@ -573,7 +750,7 @@ function InterviewReadyAI() {
               </div>
               <p style={{ fontSize: "14px" }}>of our users report interview success</p>
             </div>
-            <button className="update-btn">Track Your Interviews</button>
+            <button className="update-btn" onClick={handleOpenInterviewTracker}>Track Your Interviews</button>
           </div>
 
           <div className="career-break-card">
@@ -582,7 +759,7 @@ function InterviewReadyAI() {
               Practice with our AI-powered mock interviewer and get real-time feedback on your responses.
             </p>
             <p className="scholarship-text">First session free!</p>
-            <button className="update-btn" style={{ width: "100%", marginTop: "15px" }}>Book a Session</button>
+            <button className="update-btn" style={{ width: "100%", marginTop: "15px" }} onClick={handleBookSession}>Book a Session</button>
           </div>
           
           <div className="career-break-card" style={{ marginTop: "20px" }}>
@@ -591,15 +768,15 @@ function InterviewReadyAI() {
               Access additional resources to help you prepare for your interviews
             </p>
             <div style={{ marginTop: "15px" }}>
-              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }}>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }} onClick={handleOpenBodyLanguageTips}>
                 <span style={{ marginRight: "10px", color: "var(--primary)" }}>→</span>
                 <span>Body Language Tips</span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }}>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }} onClick={handleOpenSalaryNegotiationGuide}>
                 <span style={{ marginRight: "10px", color: "var(--primary)" }}>→</span>
                 <span>Salary Negotiation Guide</span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }}>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px", cursor: "pointer" }} onClick={handleOpenVirtualInterviewTips}>
                 <span style={{ marginRight: "10px", color: "var(--primary)" }}>→</span>
                 <span>Virtual Interview Best Practices</span>
               </div>
@@ -610,6 +787,787 @@ function InterviewReadyAI() {
 
       {/* Chat Widget */}
       <ChatWidget />
+
+      {/* Interview Tracker Modal */}
+      {showInterviewTracker && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: "white",
+            borderRadius: "8px",
+            width: "90%",
+            maxWidth: "800px",
+            maxHeight: "90vh",
+            overflow: "auto",
+            padding: "25px",
+            position: "relative"
+          }}>
+            <button
+              onClick={handleCloseInterviewTracker}
+              style={{
+                position: "absolute",
+                top: "15px",
+                right: "15px",
+                background: "transparent",
+                border: "none",
+                fontSize: "20px",
+                cursor: "pointer"
+              }}
+            >
+              ✕
+            </button>
+            
+            <h2 style={{ marginBottom: "20px", color: "var(--primary)" }}>Interview Tracker</h2>
+            
+            {/* Add New Interview Form */}
+            <div style={{ 
+              marginBottom: "30px", 
+              padding: "20px", 
+              backgroundColor: "var(--primary-light)",
+              borderRadius: "8px" 
+            }}>
+              <h3 style={{ marginBottom: "15px", fontSize: "18px" }}>Add New Interview</h3>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px", marginBottom: "15px" }}>
+                <div>
+                  <label style={{ display: "block", marginBottom: "5px", fontSize: "14px" }}>
+                    Company*
+                  </label>
+                  <input
+                    type="text"
+                    name="company"
+                    value={newInterview.company}
+                    onChange={handleInterviewInputChange}
+                    style={{ 
+                      width: "100%", 
+                      padding: "10px", 
+                      borderRadius: "5px",
+                      border: "1px solid var(--border-light)"
+                    }}
+                  />
+                </div>
+                
+                <div>
+                  <label style={{ display: "block", marginBottom: "5px", fontSize: "14px" }}>
+                    Position*
+                  </label>
+                  <input
+                    type="text"
+                    name="position"
+                    value={newInterview.position}
+                    onChange={handleInterviewInputChange}
+                    style={{ 
+                      width: "100%", 
+                      padding: "10px", 
+                      borderRadius: "5px",
+                      border: "1px solid var(--border-light)"
+                    }}
+                  />
+                </div>
+              </div>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px", marginBottom: "15px" }}>
+                <div>
+                  <label style={{ display: "block", marginBottom: "5px", fontSize: "14px" }}>
+                    Date*
+                  </label>
+                  <input
+                    type="date"
+                    name="date"
+                    value={newInterview.date}
+                    onChange={handleInterviewInputChange}
+                    style={{ 
+                      width: "100%", 
+                      padding: "10px", 
+                      borderRadius: "5px",
+                      border: "1px solid var(--border-light)"
+                    }}
+                  />
+                </div>
+                
+                <div>
+                  <label style={{ display: "block", marginBottom: "5px", fontSize: "14px" }}>
+                    Status
+                  </label>
+                  <select
+                    name="status"
+                    value={newInterview.status}
+                    onChange={handleInterviewInputChange}
+                    style={{ 
+                      width: "100%", 
+                      padding: "10px", 
+                      borderRadius: "5px",
+                      border: "1px solid var(--border-light)"
+                    }}
+                  >
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                    <option value="Offer Received">Offer Received</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div style={{ marginBottom: "15px" }}>
+                <label style={{ display: "block", marginBottom: "5px", fontSize: "14px" }}>
+                  Notes
+                </label>
+                <textarea
+                  name="notes"
+                  value={newInterview.notes}
+                  onChange={handleInterviewInputChange}
+                  style={{ 
+                    width: "100%", 
+                    padding: "10px", 
+                    borderRadius: "5px",
+                    border: "1px solid var(--border-light)",
+                    minHeight: "80px"
+                  }}
+                  placeholder="Add any notes about the interview, questions asked, or follow-up tasks..."
+                />
+              </div>
+              
+              <button 
+                onClick={handleAddInterview}
+                style={{
+                  backgroundColor: "var(--primary)",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "10px 20px",
+                  cursor: "pointer",
+                  fontSize: "16px"
+                }}
+              >
+                Add Interview
+              </button>
+            </div>
+            
+            {/* Interviews List */}
+            <h3 style={{ marginBottom: "15px", fontSize: "18px" }}>Your Interviews</h3>
+            
+            {interviews.length === 0 ? (
+              <p>No interviews tracked yet. Add your first interview above.</p>
+            ) : (
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                  <thead>
+                    <tr style={{ backgroundColor: "#f5f5f5" }}>
+                      <th style={{ padding: "10px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Company</th>
+                      <th style={{ padding: "10px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Position</th>
+                      <th style={{ padding: "10px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Date</th>
+                      <th style={{ padding: "10px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Status</th>
+                      <th style={{ padding: "10px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {interviews.map((interview, index) => (
+                      <tr key={index} style={{ borderBottom: "1px solid #eee" }}>
+                        <td style={{ padding: "10px" }}>{interview.company}</td>
+                        <td style={{ padding: "10px" }}>{interview.position}</td>
+                        <td style={{ padding: "10px" }}>{new Date(interview.date).toLocaleDateString()}</td>
+                        <td style={{ padding: "10px" }}>
+                          <select
+                            value={interview.status}
+                            onChange={(e) => handleUpdateInterviewStatus(index, e.target.value)}
+                            style={{ 
+                              padding: "5px", 
+                              borderRadius: "5px",
+                              border: "1px solid var(--border-light)"
+                            }}
+                          >
+                            <option value="Scheduled">Scheduled</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Offer Received">Offer Received</option>
+                            <option value="Rejected">Rejected</option>
+                          </select>
+                        </td>
+                        <td style={{ padding: "10px" }}>
+                          <div style={{ display: "flex", gap: "10px" }}>
+                            <button
+                              onClick={() => {
+                                // Show notes in an alert for simplicity
+                                alert(`Notes for ${interview.company} interview:\n\n${interview.notes || "No notes available"}`);
+                              }}
+                              style={{
+                                backgroundColor: "#f0f0f0",
+                                border: "none",
+                                borderRadius: "5px",
+                                padding: "5px 10px",
+                            </button>
+                            <button
+                              onClick={() => handleDeleteInterview(index)}
+                              style={{
+                                backgroundColor: "#ffebee",
+                                color: "#d32f2f",
+                                border: "none",
+                                borderRadius: "5px",
+                                padding: "5px 10px",
+                                cursor: "pointer"
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Book a Session Modal */}
+      {bookSessionModal && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: "white",
+            borderRadius: "8px",
+            width: "90%",
+            maxWidth: "500px",
+            padding: "25px",
+            position: "relative"
+          }}>
+            <button
+              onClick={handleCloseBookSession}
+              style={{
+                position: "absolute",
+                top: "15px",
+                right: "15px",
+                background: "transparent",
+                border: "none",
+                fontSize: "20px",
+                cursor: "pointer"
+              }}
+            >
+              ✕
+            </button>
+            
+            <h2 style={{ marginBottom: "20px", color: "var(--primary)" }}>Book a Session</h2>
+            
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmitBooking();
+            }}>
+              <div style={{ marginBottom: "15px" }}>
+                <label htmlFor="name" style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd"
+                  }}
+                  value={bookingFormData.name}
+                  onChange={(e) => setBookingFormData({...bookingFormData, name: e.target.value})}
+                  required
+                />
+              </div>
+              
+              <div style={{ marginBottom: "15px" }}>
+                <label htmlFor="email" style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd"
+                  }}
+                  value={bookingFormData.email}
+                  onChange={(e) => setBookingFormData({...bookingFormData, email: e.target.value})}
+                  required
+                />
+              </div>
+              
+              <div style={{ marginBottom: "15px" }}>
+                <label htmlFor="date" style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Date</label>
+                <input
+                  type="date"
+                  id="date"
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd"
+                  }}
+                  value={bookingFormData.date}
+                  onChange={(e) => setBookingFormData({...bookingFormData, date: e.target.value})}
+                  required
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+              
+              <div style={{ marginBottom: "20px" }}>
+                <label htmlFor="time" style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Time</label>
+                <select
+                  id="time"
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd"
+                  }}
+                  value={bookingFormData.time}
+                  onChange={(e) => setBookingFormData({...bookingFormData, time: e.target.value})}
+                  required
+                >
+                  <option value="">Select a time</option>
+                  <option value="9:00 AM">9:00 AM</option>
+                  <option value="10:00 AM">10:00 AM</option>
+                  <option value="11:00 AM">11:00 AM</option>
+                  <option value="1:00 PM">1:00 PM</option>
+                  <option value="2:00 PM">2:00 PM</option>
+                  <option value="3:00 PM">3:00 PM</option>
+                  <option value="4:00 PM">4:00 PM</option>
+                </select>
+              </div>
+              
+              <div style={{ marginBottom: "20px" }}>
+                <label htmlFor="topic" style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Session Topic</label>
+                <select
+                  id="topic"
+                  style={{
+                    width: "100%",
+                    padding: "10px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd"
+                  }}
+                  value={bookingFormData.topic}
+                  onChange={(e) => setBookingFormData({...bookingFormData, topic: e.target.value})}
+                  required
+                >
+                  <option value="">Select a topic</option>
+                  <option value="Mock Interview">Mock Interview</option>
+                  <option value="Resume Review">Resume Review</option>
+                  <option value="Career Guidance">Career Guidance</option>
+                  <option value="Technical Preparation">Technical Preparation</option>
+                  <option value="Behavioral Interview Prep">Behavioral Interview Prep</option>
+                </select>
+              </div>
+              
+              <button
+                type="submit"
+                style={{
+                  backgroundColor: "var(--primary)",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  padding: "12px 20px",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  width: "100%"
+                }}
+              >
+                Schedule Session
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Booking Confirmation Modal */}
+      {showBookingConfirmation && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: "white",
+            borderRadius: "8px",
+            width: "90%",
+            maxWidth: "500px",
+            padding: "25px",
+            position: "relative",
+            textAlign: "center"
+          }}>
+            <h2 style={{ marginBottom: "15px", color: "var(--primary)" }}>Booking Confirmed!</h2>
+            <p style={{ marginBottom: "20px", fontSize: "16px" }}>
+              Your session has been booked successfully. We've sent a confirmation email to {bookingFormData.email} with all the details.
+            </p>
+            <p style={{ marginBottom: "30px", fontSize: "15px" }}>
+              <strong>Date:</strong> {bookingFormData.date}<br />
+              <strong>Time:</strong> {bookingFormData.time}<br />
+              <strong>Topic:</strong> {bookingFormData.topic}
+            </p>
+            <button
+              onClick={handleCloseBookingConfirmation}
+              style={{
+                backgroundColor: "var(--primary)",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "10px 20px",
+                fontSize: "16px",
+                cursor: "pointer"
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Resource Modals */}
+      {/* Body Language Tips Modal */}
+      {showBodyLanguageTips && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: "white",
+            borderRadius: "8px",
+            width: "90%",
+            maxWidth: "700px",
+            maxHeight: "90vh",
+            overflow: "auto",
+            padding: "25px",
+            position: "relative"
+          }}>
+            <button
+              onClick={handleCloseResourceModal}
+              style={{
+                position: "absolute",
+                top: "15px",
+                right: "15px",
+                background: "transparent",
+                border: "none",
+                fontSize: "20px",
+                cursor: "pointer"
+              }}
+            >
+              ✕
+            </button>
+            
+            <h2 style={{ marginBottom: "20px", color: "var(--primary)" }}>Body Language Tips for Interviews</h2>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>1. Maintain Good Posture</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Sit up straight with shoulders back but relaxed. Good posture conveys confidence and attentiveness.
+                Avoid slouching or leaning too far back, which can signal disinterest or overconfidence.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>2. Practice Effective Eye Contact</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Maintain natural eye contact with your interviewer(s), looking at them for 5-7 seconds at a time before briefly looking away.
+                In panel interviews, make eye contact with the person asking the question, but also glance at other panel members while answering.
+                For virtual interviews, look at your camera (not the screen) to create the impression of eye contact.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>3. Monitor Your Hand Gestures</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Use natural, open hand gestures to emphasize points and show engagement.
+                Keep gestures contained within your personal space—wild movements can be distracting.
+                Avoid nervous habits like pen-clicking, hair-twirling, or excessive fidgeting.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>4. Present an Engaged Expression</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Display a pleasant, attentive facial expression with occasional smiles.
+                Nod occasionally to show you're listening and understanding.
+                Be mindful of unconscious facial expressions that might convey confusion or disagreement.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>5. Control Your Nervous Energy</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Practice deep, slow breathing before and during the interview to remain calm.
+                Plant both feet on the floor to ground yourself and reduce leg-shaking.
+                Channel nervous energy into focused enthusiasm rather than random movements.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>6. Mirror Appropriately</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Subtly match the interviewer's communication style and energy level to build rapport.
+                Don't overdo mirroring—it should feel natural, not forced.
+              </p>
+            </div>
+            
+            <div>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>7. Practice Before the Interview</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Record yourself during mock interviews to identify unconscious body language habits.
+                Practice with a friend who can provide feedback on your nonverbal communication.
+                Rehearse in similar attire and setting as the actual interview to feel more comfortable.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Salary Negotiation Guide Modal */}
+      {showSalaryNegotiationGuide && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: "white",
+            borderRadius: "8px",
+            width: "90%",
+            maxWidth: "700px",
+            maxHeight: "90vh",
+            overflow: "auto",
+            padding: "25px",
+            position: "relative"
+          }}>
+            <button
+              onClick={handleCloseResourceModal}
+              style={{
+                position: "absolute",
+                top: "15px",
+                right: "15px",
+                background: "transparent",
+                border: "none",
+                fontSize: "20px",
+                cursor: "pointer"
+              }}
+            >
+              ✕
+            </button>
+            
+            <h2 style={{ marginBottom: "20px", color: "var(--primary)" }}>Salary Negotiation Guide</h2>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>1. Research Your Market Value</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Use sites like Glassdoor, Payscale, and LinkedIn Salary to research typical compensation for your role, experience level, and location.
+                Speak with industry colleagues or recruiters to gather additional data points.
+                Consider your unique skills and qualifications that might place you above the average.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>2. Delay Salary Discussions</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                When possible, avoid sharing your salary expectations early in the interview process.
+                If asked directly, you can say: "I'd like to learn more about the role and responsibilities before discussing compensation."
+                If pressed, provide a salary range rather than a specific number.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>3. Let the Employer Make the First Offer</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Ideally, let the employer name a figure first to avoid undervaluing yourself.
+                When they make an offer, thank them and ask for time to consider it (24-48 hours is reasonable).
+                Use this time to carefully evaluate the entire compensation package, not just the base salary.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>4. Make a Counter-Offer</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Begin your response by expressing enthusiasm for the role and appreciation for the offer.
+                Present your counter-offer at the higher end of your researched range.
+                Justify your counter with specific points about your skills, experience, and the value you'll bring.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>5. Consider the Total Package</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Remember that compensation includes more than just base salary (benefits, bonuses, equity, PTO, flexibility, etc.).
+                If there's limited flexibility on salary, negotiate for improvements in other areas of the package.
+                Prioritize the elements that matter most to you and focus your negotiations there.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>6. Use the Right Language</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Frame your requests collaboratively rather than adversarially: "How can we find a package that works for both of us?"
+                Use confident but respectful language: "Based on my research and experience, I was expecting a salary closer to X."
+                Express gratitude throughout the process, regardless of the outcome.
+              </p>
+            </div>
+            
+            <div>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>7. Get It in Writing</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Once you've reached an agreement, request a formal offer letter that details all aspects of the compensation package.
+                Review the letter carefully to ensure it matches your understanding of the agreement.
+                Don't be afraid to ask for clarification on any unclear items before accepting.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Virtual Interview Best Practices Modal */}
+      {showVirtualInterviewTips && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: "white",
+            borderRadius: "8px",
+            width: "90%",
+            maxWidth: "700px",
+            maxHeight: "90vh",
+            overflow: "auto",
+            padding: "25px",
+            position: "relative"
+          }}>
+            <button
+              onClick={handleCloseResourceModal}
+              style={{
+                position: "absolute",
+                top: "15px",
+                right: "15px",
+                background: "transparent",
+                border: "none",
+                fontSize: "20px",
+                cursor: "pointer"
+              }}
+            >
+              ✕
+            </button>
+            
+            <h2 style={{ marginBottom: "20px", color: "var(--primary)" }}>Virtual Interview Best Practices</h2>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>1. Test Your Technology</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Test your camera, microphone, and internet connection at least 24 hours before the interview.
+                Familiarize yourself with the video platform being used (Zoom, Microsoft Teams, Google Meet, etc.).
+                Have a backup plan ready in case of technical difficulties (phone number to call, alternative device).
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>2. Set Up Your Environment</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Choose a quiet location with minimal background distractions.
+                Ensure you have good lighting on your face (natural light is best, or position a lamp in front of you).
+                Arrange a neutral, professional background or use a simple virtual background if needed.
+                Position your camera at eye level and sit at an appropriate distance (head and shoulders should be visible).
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>3. Dress Professionally</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Dress as you would for an in-person interview, including bottoms (in case you need to stand up).
+                Avoid busy patterns or bright colors that can be distracting on camera.
+                Consider how your outfit appears on screen—test your appearance in advance.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>4. Mind Your Virtual Body Language</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Look at the camera (not the screen) when speaking to create the impression of eye contact.
+                Sit up straight with good posture and avoid excessive movement.
+                Nod and smile to show engagement, as some nonverbal cues are lost in virtual settings.
+                Keep hand gestures within the frame when emphasizing points.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>5. Eliminate Distractions</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Turn off notifications on your computer and phone.
+                Close unnecessary browser tabs and applications.
+                Inform household members about your interview to prevent interruptions.
+                Have a "do not disturb" sign ready if needed.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>6. Prepare Your Materials</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Have a copy of your resume, the job description, and prepared notes within reach.
+                Keep a notepad and pen handy for taking notes during the interview.
+                Have a glass of water nearby in case your throat gets dry.
+              </p>
+            </div>
+            
+            <div>
+              <h3 style={{ fontSize: "18px", marginBottom: "10px" }}>7. Practice Virtual Interview Etiquette</h3>
+              <p style={{ fontSize: "15px", lineHeight: "1.5", color: "#555" }}>
+                Join the meeting 5-10 minutes early to address any last-minute technical issues.
+                Mute yourself when not speaking if there's any background noise.
+                Speak clearly and slightly slower than normal, pausing occasionally to account for possible audio delays.
+                If experiencing technical difficulties, stay calm and communicate the issue professionally.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

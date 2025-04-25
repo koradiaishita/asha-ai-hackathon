@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Mic, 
@@ -9,6 +9,35 @@ import {
   Send,
   MicNone
 } from '@mui/icons-material';
+
+// Define SpeechRecognition interface since TypeScript doesn't include it natively
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number;
+  results: {
+    [index: number]: {
+      [index: number]: {
+        transcript: string;
+      };
+    };
+  };
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start: () => void;
+  stop: () => void;
+  onresult: (event: SpeechRecognitionEvent) => void;
+}
+
+// Add to Window interface
+declare global {
+  interface Window {
+    SpeechRecognition?: new () => SpeechRecognition;
+    webkitSpeechRecognition?: new () => SpeechRecognition;
+  }
+}
 
 interface VoiceModalProps {
   isOpen: boolean;
@@ -26,15 +55,17 @@ export function VoiceModal({ isOpen, onClose, onSubmit }: VoiceModalProps) {
   useEffect(() => {
     if (window.SpeechRecognition || window.webkitSpeechRecognition) {
       recognition.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-      recognition.current.continuous = true;
-      recognition.current.interimResults = true;
-      recognition.current.lang = 'en-US';
+      if (recognition.current) {
+        recognition.current.continuous = true;
+        recognition.current.interimResults = true;
+        recognition.current.lang = 'en-US';
 
-      recognition.current.onresult = (event) => {
-        const current = event.resultIndex;
-        const transcriptResult = event.results[current][0].transcript;
-        setTranscript(transcriptResult);
-      };
+        recognition.current.onresult = (event) => {
+          const current = event.resultIndex;
+          const transcriptResult = event.results[current][0].transcript;
+          setTranscript(transcriptResult);
+        };
+      }
     }
 
     return () => {

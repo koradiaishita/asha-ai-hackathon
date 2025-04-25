@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../App.css';
 
 function UpskillNavigator() {
@@ -130,7 +130,7 @@ function UpskillNavigator() {
             }}>
               <div className="job-info">
                 <h3 className="job-title" style={{ fontSize: "24px", marginBottom: "15px" }}>
-                  Access premium courses and start your learning journey today
+                  Access premium courses and start your learning journey
                 </h3>
                 <p style={{ marginBottom: "20px", fontSize: "16px", color: "var(--text-gray)" }}>
                   Gain in-demand skills that employers are looking for and advance your career with our curated learning paths.
@@ -428,8 +428,15 @@ function UpskillNavigator() {
                 border: "1px solid #e6f2ff",
                 boxShadow: "0 3px 10px rgba(0,0,0,0.05)",
                 transition: "transform 0.3s ease",
-                cursor: "pointer",
-                ":hover": { transform: "translateY(-5px)" }
+                cursor: "pointer"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-5px)";
+                e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 3px 10px rgba(0,0,0,0.05)";
               }}>
                 <div style={{ fontSize: "36px", marginBottom: "15px", color: "var(--primary)" }}>⏱️</div>
                 <h3 style={{ marginBottom: "10px", fontSize: "18px", color: "#333" }}>Learning Hours</h3>
@@ -460,7 +467,7 @@ function UpskillNavigator() {
                 cursor: "pointer"
               }}>
                 <div style={{ fontSize: "36px", marginBottom: "15px", color: "var(--primary)" }}>📚</div>
-                <h3 style={{ marginBottom: "10px", fontSize: "18px", color: "#333" }}>Topics</h3>
+                <h3 style={{ marginBottom: "10px", fontSize: "18px" }}>Topics</h3>
                 <p style={{ fontSize: "28px", fontWeight: "bold", color: "var(--primary)" }}>15+</p>
                 <p style={{ fontSize: "14px", color: "var(--text-gray)", marginTop: "5px" }}>In-demand skill areas</p>
               </div>
@@ -502,8 +509,15 @@ function UpskillNavigator() {
                 border: "1px solid #eee",
                 borderRadius: "10px",
                 transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                cursor: "pointer",
-                ":hover": { transform: "translateY(-5px)", boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }
+                cursor: "pointer"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-5px)";
+                e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
               }}>
                 <div style={{ 
                   height: "160px", 
@@ -562,8 +576,15 @@ function UpskillNavigator() {
                 border: "1px solid #eee",
                 borderRadius: "10px",
                 transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                cursor: "pointer",
-                ":hover": { transform: "translateY(-5px)", boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }
+                cursor: "pointer"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-5px)";
+                e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
               }}>
                 <div style={{ 
                   height: "160px", 
@@ -623,8 +644,15 @@ function UpskillNavigator() {
                 border: "1px solid #eee",
                 borderRadius: "10px",
                 transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                cursor: "pointer",
-                ":hover": { transform: "translateY(-5px)", boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }
+                cursor: "pointer"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-5px)";
+                e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
               }}>
                 <div style={{ 
                   height: "160px", 

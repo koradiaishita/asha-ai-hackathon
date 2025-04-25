@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import { ChatWidget } from '../components/ChatWidget';
 import '../App.css';
 
 function ProjectIdeasAI() {
@@ -323,7 +322,7 @@ function ProjectIdeasAI() {
             {
               title: "Enterprise Project Management Office",
               description: "Design the structure, processes, and tools for an enterprise PMO, including governance, templates, and reporting systems.",
-              skills: ["PMO Design", "Governance Frameworks", "Reporting Systems", "Change Management"],
+              skills: ["PMO Design", "Governance Frameworks", "Reporting Systems", "Change Management
               timeEstimate: "12-16 weeks",
               resources: ["PMO setup guides", "Governance frameworks", "Enterprise tool evaluation"]
             }
@@ -538,10 +537,16 @@ function ProjectIdeasAI() {
           <section className="featured-jobs">
             <h2>Find Projects for Your Field</h2>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "15px" }}>
+              <div 
+                  className="newly-added"
+                  onClick={() => handleGenerateProjectIdeas("Software Development")}
+                  style={{ cursor: "pointer" }}
+                >
+                  Software Development
+                </div>
               <span 
                 className="newly-added" 
-                style={{ cursor: "pointer" }} 
-                style={{ cursor: "pointer" }} 
+                style={{ cursor: "pointer" }}
                 onClick={() => handleGenerateProjectIdeas("UX/UI Design")}
               >
                 UX/UI Design

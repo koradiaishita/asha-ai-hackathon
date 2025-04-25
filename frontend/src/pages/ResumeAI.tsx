@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, ChangeEvent } from 'react';
+import { useState, useRef } from 'react';
 import { ResumeFeatureContent } from '../components/resume-features/ResumeFeatureContent';
 import { ProjectRecommendations } from '../components/ProjectRecommendations';
 import '../App.css';
@@ -1472,7 +1472,7 @@ Sincerely,
                       <div style={{ width: "100%", height: "1px", background: "#ddd", marginBottom: "15px" }}></div>
                       <div style={{ display: "flex", marginBottom: "10px" }}>
                         <div style={{ width: "30%", height: "8px", background: "#3f87ff", marginRight: "10px" }}></div>
-                        <div style={{ width: "65%", height: "8px", background: "#666" }}></div>
+                        <div style={{ width: "65%", height: "8px", background: "#666", marginBottom: "10px" }}></div>
                       </div>
                       <div style={{ width: "90%", height: "8px", background: "#666", marginBottom: "15px" }}></div>
                       <div style={{ display: "flex", marginBottom: "10px" }}>
@@ -1510,13 +1510,11 @@ Sincerely,
                       </div>
                       <div style={{ width: "100%", height: "2px", background: "#444", marginBottom: "15px" }}></div>
                       <div style={{ width: "40%", height: "10px", background: "#333", marginBottom: "10px" }}></div>
-                      <div style={{ width: "95%", height: "8px", background: "#666", marginBottom: "8px" }}></div>
+                      <div style={{ width: "95%", height: "8px", background: "#666", marginBottom: "5px" }}></div>
                       <div style={{ width: "90%", height: "8px", background: "#666", marginBottom: "15px" }}></div>
-                      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                        <div style={{ height: "6px", width: "45px", background: "#e6e6e6", borderRadius: "3px" }}></div>
-                        <div style={{ height: "6px", width: "65px", background: "#e6e6e6", borderRadius: "3px" }}></div>
-                        <div style={{ height: "6px", width: "55px", background: "#e6e6e6", borderRadius: "3px" }}></div>
-                      </div>
+                      <div style={{ width: "40%", height: "10px", background: "#333", marginBottom: "10px" }}></div>
+                      <div style={{ width: "100%", height: "8px", background: "#666", marginBottom: "5px" }}></div>
+                      <div style={{ width: "95%", height: "8px", background: "#666" }}></div>
                     </div>
                     <div style={{ padding: "10px", textAlign: "center" }}>
                       <h4>Executive</h4>
@@ -2228,46 +2226,22 @@ Sincerely,
               <div style={{ marginTop: "25px" }}>
                   <h4 style={{ marginBottom: "15px" }}>Find Projects for Your Field:</h4>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: "15px" }}>
-                    <span 
-                      className="newly-added" 
-                      style={{ cursor: "pointer" }} 
-                      onClick={() => handleGenerateProjectIdeas("Software Development")}
-                    >
+                    <span className="newly-added" style={{ cursor: "pointer" }} onClick={() => handleGenerateProjectIdeas("Software Development")}>
                       Software Development
                     </span>
-                    <span 
-                      className="newly-added" 
-                      style={{ cursor: "pointer" }} 
-                      onClick={() => handleGenerateProjectIdeas("Data Analysis")}
-                    >
+                    <span className="newly-added" style={{ cursor: "pointer" }} onClick={() => handleGenerateProjectIdeas("Data Analysis")}>
                       Data Analysis
                     </span>
-                    <span 
-                      className="newly-added" 
-                      style={{ cursor: "pointer" }} 
-                      onClick={() => handleGenerateProjectIdeas("UX/UI Design")}
-                    >
+                    <span className="newly-added" style={{ cursor: "pointer" }} onClick={() => handleGenerateProjectIdeas("UX/UI Design")}>
                       UX/UI Design
                     </span>
-                    <span 
-                      className="newly-added" 
-                      style={{ cursor: "pointer" }} 
-                      onClick={() => handleGenerateProjectIdeas("Digital Marketing")}
-                    >
+                    <span className="newly-added" style={{ cursor: "pointer" }} onClick={() => handleGenerateProjectIdeas("Digital Marketing")}>
                       Digital Marketing
                     </span>
-                    <span 
-                      className="newly-added" 
-                      style={{ cursor: "pointer" }} 
-                      onClick={() => handleGenerateProjectIdeas("Project Management")}
-                    >
+                    <span className="newly-added" style={{ cursor: "pointer" }} onClick={() => handleGenerateProjectIdeas("Project Management")}>
                       Project Management
                     </span>
-                    <span 
-                      className="newly-added" 
-                      style={{ cursor: "pointer" }} 
-                      onClick={() => handleGenerateProjectIdeas("Content Creation")}
-                    >
+                    <span className="newly-added" style={{ cursor: "pointer" }} onClick={() => handleGenerateProjectIdeas("Content Creation")}>
                       Content Creation
                     </span>
                   </div>
@@ -2603,7 +2577,7 @@ Sincerely,
                   <p style={{ marginBottom: "15px", color: "var(--text-gray)" }}>
                     Drag and drop your resume here or click to browse
                   </p>
-                  <input
+                  <input 
                     type="file"
                     accept=".pdf,.docx,.rtf"
                     onChange={handleResumeUpload}

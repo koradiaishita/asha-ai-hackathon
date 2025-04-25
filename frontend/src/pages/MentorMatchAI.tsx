@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { mentorsData } from '../data/jobsData';
-import { ChatWidget } from '../components/ChatWidget';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
 import './MentorMatchAI.css';
@@ -1638,7 +1637,6 @@ function MentorMatchAI() {
         </div>
       )}
     </div>
-  </div>
   );
 }
 

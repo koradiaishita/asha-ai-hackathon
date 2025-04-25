@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import '../App.css';
 
 function InterviewReadyAI() {
   // Interview preparation state and handlers

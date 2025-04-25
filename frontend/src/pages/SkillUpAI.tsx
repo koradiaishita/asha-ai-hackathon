@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import { ChatWidget } from '../components/ChatWidget';
 import '../App.css';
 
 function SkillUpAI() {

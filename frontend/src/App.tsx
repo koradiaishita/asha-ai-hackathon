@@ -1,34 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import './App.css'
-import { Link, Routes, Route, useNavigate } from 'react-router-dom'
-import ProjectIdeasAI from './pages/ProjectIdeasAI'
-import InterviewReadyAI from './pages/InterviewReadyAI'
-import ResumeAI from './pages/ResumeAI'
-import SkillUpAI from './pages/SkillUpAI'
-import MentorMatchAI from './pages/MentorMatchAI'
-import Careers from './pages/Careers'
-// Import Material UI icons
-import HomeIcon from '@mui/icons-material/Home'
-import DescriptionIcon from '@mui/icons-material/Description'
-import BusinessCenterIcon from '@mui/icons-material/BusinessCenter'
-import FolderSpecialIcon from '@mui/icons-material/FolderSpecial'
-import GroupIcon from '@mui/icons-material/Group'
-import SchoolIcon from '@mui/icons-material/School'
-import EventIcon from '@mui/icons-material/Event'
-import ContactSupportIcon from '@mui/icons-material/ContactSupport'
-import SearchIcon from '@mui/icons-material/Search'
-import FilterListIcon from '@mui/icons-material/FilterList'
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
-import FlashOnIcon from '@mui/icons-material/FlashOn'
-import HomeWorkIcon from '@mui/icons-material/HomeWork'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import FacebookIcon from '@mui/icons-material/Facebook'
-import TwitterIcon from '@mui/icons-material/Twitter'
-import LinkedInIcon from '@mui/icons-material/LinkedIn'
-import InstagramIcon from '@mui/icons-material/Instagram'
-import MenuIcon from '@mui/icons-material/Menu'
-import WbSunnyIcon from '@mui/icons-material/WbSunny'
-import AppsIcon from '@mui/icons-material/Apps'
+import { Link } from 'react-router-dom'
+import React from 'react'
 
 // Sample job data
 const jobsData = [
@@ -145,27 +118,28 @@ function App() {
 
 // HomePage component for the main landing page
 function HomePage() {
-  const [filteredJobs, setFilteredJobs] = React.useState(jobsData);
-  const [activeWorkMode, setActiveWorkMode] = React.useState<string | null>(null);
-  const [bookmarkedJobs, setBookmarkedJobs] = React.useState<number[]>([]);
-  const [showingEvents, setShowingEvents] = React.useState(false);
-  const [showingContact, setShowingContact] = React.useState(false);
-  const [showingEmployers, setShowingEmployers] = React.useState(false);
-  const [showingProfile, setShowingProfile] = React.useState(false);
-  const [showingReturnship, setShowingReturnship] = React.useState(false);
+  const [filteredJobs, setFilteredJobs] = useState(jobsData);
+  const [activeWorkMode, setActiveWorkMode] = useState<string | null>(null);
+  const [bookmarkedJobs, setBookmarkedJobs] = useState<number[]>([]);
+
+  const [showingEvents, setShowingEvents] = useState(false);
+  const [showingContact, setShowingContact] = useState(false);
+  const [showingEmployers, setShowingEmployers] = useState(false);
+  const [showingProfile, setShowingProfile] = useState(false);
+  const [showingReturnship, setShowingReturnship] = useState(false);
   
   // Add user state to store registered users
-  const [registeredUsers, setRegisteredUsers] = React.useState<{fullName: string, email: string, password: string}[]>([]);
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  const [currentUser, setCurrentUser] = React.useState<string>('');
-  const [showLoginModal, setShowLoginModal] = React.useState(false);
-  const [loginFormData, setLoginFormData] = React.useState({
+  const [registeredUsers, setRegisteredUsers] = useState<{fullName: string, email: string, password: string}[]>([]);
+
+  const [currentUser, setCurrentUser] = useState<string>('');
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginFormData, setLoginFormData] = useState({
     email: '',
     password: ''
   });
 
   // Add a welcome banner state
-  const [showWelcomeBanner, setShowWelcomeBanner] = React.useState(false);
+  const [showWelcomeBanner, setShowWelcomeBanner] = useState(false);
   
   // Function to handle search input submission
   const handleSearch = (e: React.FormEvent) => {
@@ -367,7 +341,6 @@ function HomePage() {
     
     if (user && user.password === loginFormData.password) {
       // Set logged in state
-      setIsLoggedIn(true);
       setCurrentUser(user.fullName);
       setShowLoginModal(false);
       // Show welcome banner
@@ -407,7 +380,6 @@ function HomePage() {
             placeholder="Search jobs, skills or career opportunities" 
             className="search-input" 
           />
-          <SearchIcon className="search-icon" fontSize="small" />
         </form>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button 
@@ -483,12 +455,14 @@ function HomePage() {
                   width: '100%',
                   padding: '10px 15px',
                   borderRadius: '8px',
-                  transition: 'background-color 0.2s',
-                  '&:hover': {
-                    backgroundColor: 'rgba(149, 69, 225, 0.05)'
-                  }
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(149, 69, 225, 0.08)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '';
                 }}>
-                  <HomeIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
                   <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>Home</span>
                 </Link>
               </li>
@@ -503,7 +477,6 @@ function HomePage() {
                   borderRadius: '8px',
                   transition: 'background-color 0.2s'
                 }}>
-                  <DescriptionIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
                   <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>Resume AI</span>
                 </Link>
               </li>
@@ -518,7 +491,6 @@ function HomePage() {
                   borderRadius: '8px',
                   transition: 'background-color 0.2s'
                 }}>
-                  <BusinessCenterIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
                   <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>SkillUp AI</span>
                 </Link>
               </li>
@@ -533,7 +505,6 @@ function HomePage() {
                   borderRadius: '8px',
                   transition: 'background-color 0.2s'
                 }}>
-                  <FolderSpecialIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
                   <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>ProjectIdeas AI</span>
                 </Link>
               </li>
@@ -548,7 +519,6 @@ function HomePage() {
                   borderRadius: '8px',
                   transition: 'background-color 0.2s'
                 }}>
-                  <GroupIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
                   <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>InterviewReadyAI</span>
                 </Link>
               </li>
@@ -563,7 +533,6 @@ function HomePage() {
                   borderRadius: '8px',
                   transition: 'background-color 0.2s'
                 }}>
-                  <SchoolIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
                   <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>MentorMatch AI</span>
                 </Link>
               </li>
@@ -576,7 +545,6 @@ function HomePage() {
                   borderRadius: '8px',
                   transition: 'background-color 0.2s'
                 }} onClick={handleEventsClick}>
-                  <EventIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
                   <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>Events</span>
                 </div>
               </li>
@@ -589,7 +557,6 @@ function HomePage() {
                   borderRadius: '8px',
                   transition: 'background-color 0.2s'
                 }} onClick={handleContactClick}>
-                  <ContactSupportIcon className="nav-icon" style={{ marginRight: '12px', color: 'var(--primary)' }} />
                   <span className="nav-text" style={{ fontSize: '15px', fontWeight: '500' }}>Contact us</span>
                 </div>
               </li>
@@ -609,7 +576,6 @@ function HomePage() {
                 color: 'var(--primary)',
                 transition: 'background-color 0.2s'
               }} onClick={handleBusinessClick}>
-                <MenuIcon className="business-icon" style={{ marginRight: '12px', fontSize: '20px' }} />
                 JobsForHer for Employers
               </button>
             </div>
@@ -627,10 +593,10 @@ function HomePage() {
               gap: '15px',
               margin: '15px 0' 
             }}>
-              <FacebookIcon className="social-icon" style={{ color: 'var(--primary)', cursor: 'pointer' }} />
-              <TwitterIcon className="social-icon" style={{ color: 'var(--primary)', cursor: 'pointer' }} />
-              <LinkedInIcon className="social-icon" style={{ color: 'var(--primary)', cursor: 'pointer' }} />
-              <InstagramIcon className="social-icon" style={{ color: 'var(--primary)', cursor: 'pointer' }} />
+              <span className="social-icon" style={{ color: 'var(--primary)', cursor: 'pointer' }} />
+              <span className="social-icon" style={{ color: 'var(--primary)', cursor: 'pointer' }} />
+              <span className="social-icon" style={{ color: 'var(--primary)', cursor: 'pointer' }} />
+              <span className="social-icon" style={{ color: 'var(--primary)', cursor: 'pointer' }} />
             </div>
           </nav>
         </aside>
@@ -650,8 +616,7 @@ function HomePage() {
                       borderRadius: "8px", 
                       overflow: "hidden",
                       boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
-                    }}>
-                    </div>
+                    }}></div>
                     <h3 className="job-title">Asha AI Chatbot</h3>
                     <p style={{ marginBottom: "15px", color: "var(--text-gray)", textAlign: "center" }}>
                       Asha is an AI-powered virtual assistant designed to guide women in their career journey. 
@@ -692,7 +657,6 @@ function HomePage() {
                         Show All Jobs
                       </button>
                     )}
-                    <FilterListIcon className="filter-icon" />
                   </div>
                 </div>
                 <div className="work-mode-options">
@@ -704,7 +668,6 @@ function HomePage() {
                       border: activeWorkMode === "Work From Home" ? "2px solid var(--primary)" : "none"
                     }}
                   >
-                    <HomeWorkIcon className="mode-icon" />
                     <span className="mode-text">Work From Home</span>
                   </div>
                   <div 
@@ -715,7 +678,6 @@ function HomePage() {
                       border: activeWorkMode === "Hybrid" ? "2px solid var(--primary)" : "none"
                     }}
                   >
-                    <WbSunnyIcon className="mode-icon" />
                     <span className="mode-text">Hybrid</span>
                   </div>
                   <div 
@@ -726,7 +688,6 @@ function HomePage() {
                       border: activeWorkMode === "Part Time" ? "2px solid var(--primary)" : "none"
                     }}
                   >
-                    <AccessTimeIcon className="mode-icon" />
                     <span className="mode-text">Part Time</span>
                   </div>
                   <div 
@@ -737,7 +698,6 @@ function HomePage() {
                       border: activeWorkMode === "Full Time" ? "2px solid var(--primary)" : "none"
                     }}
                   >
-                    <BusinessCenterIcon className="mode-icon" />
                     <span className="mode-text">Full Time</span>
                   </div>
                 </div>
@@ -782,7 +742,7 @@ function HomePage() {
                         <span className="newly-added">{job.badge}</span>
                       </div>
                       <div className="job-actions">
-                        <BookmarkBorderIcon 
+                        <span 
                           className="bookmark-btn" 
                           onClick={() => handleBookmark(job.id)} 
                           style={{ 
@@ -792,7 +752,7 @@ function HomePage() {
                           }} 
                         />
                         <button className="apply-btn" onClick={() => handleApply(job.title)}>
-                          <FlashOnIcon className="lightning-icon" />
+                          <span className="lightning-icon" />
                           Easy Apply
                         </button>
                       </div>
